@@ -365,6 +365,7 @@ type TagFilter = PlanTag | "all";
 interface HomeFeedPlan {
   id: number;
   tag?: PlanTag;
+  isChallenge?: boolean;
   format?: "online" | "offline";
   duration?: string;
   title: string;
@@ -412,6 +413,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
   {
     id: 1,
     tag: "running",
+    isChallenge: true,
     format: "offline",
     duration: "21 день",
     title: "21 день бега",
@@ -420,8 +422,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed1 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 21 день",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/1",
@@ -429,6 +431,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
   {
     id: 2,
     tag: "recovery",
+    isChallenge: true,
     format: "online",
     duration: "14 дней",
     title: "14 дней без смартфона перед сном",
@@ -437,8 +440,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed2 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Вечер · 14 дней",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/2",
@@ -454,8 +457,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed3 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/3",
@@ -471,8 +474,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed4 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/4",
@@ -488,8 +491,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed5 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/5",
@@ -505,8 +508,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed6 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 6], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 12 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/6",
@@ -522,8 +525,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed7 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Утро · 10 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/7",
@@ -539,8 +542,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed8 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "День · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/8",
@@ -556,8 +559,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed9 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [7], repeat: { type: "weekly" } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "День · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/9",
@@ -573,8 +576,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed10 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [],
-    participantsLabel: "Будь первым",
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "128 чел.",
     timeDate: "Вечер · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/10",
@@ -710,7 +713,7 @@ function FeedEventCard({
               overflow: "hidden",
             }}
           >
-            {plan.title}
+            {plan.isChallenge ? `Челлендж: ${plan.title}` : plan.title}
           </h2>
           <p className="mt-2 max-w-full truncate text-[15px] text-white/85">{plan.timeDate}</p>
           {plan.address && (
@@ -778,11 +781,11 @@ function HomeScreen({
     <div className="relative flex flex-col h-full bg-surface">
       <div className="h-12 px-4 flex items-center justify-end">
         <div className="flex items-center gap-4 flex-shrink-0">
-          <button onClick={() => setSheet("filter")} className="w-6 h-6 flex items-center justify-center">
-            <Filter size={24} strokeWidth={1.9} color="var(--foreground)" />
+          <button onClick={() => setSheet("filter")} className="w-[22px] h-[22px] flex items-center justify-center text-muted-foreground">
+            <Filter size={22} strokeWidth={1.8} />
           </button>
-          <button onClick={() => onNavigate("search", "home")} className="w-6 h-6 flex items-center justify-center">
-            <Search size={24} strokeWidth={1.9} color="var(--foreground)" />
+          <button onClick={() => onNavigate("search", "home")} className="w-[22px] h-[22px] flex items-center justify-center text-muted-foreground">
+            <Search size={22} strokeWidth={1.8} />
           </button>
         </div>
       </div>
@@ -1771,7 +1774,7 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        <div className="relative mb-4 aspect-[4/5] overflow-hidden rounded-xl" style={{ background: "linear-gradient(135deg, var(--brand-bright) 0%, var(--accent) 48%, var(--brand-dark) 100%)" }}>
+        <div className="relative mb-4 aspect-[1.9/1] overflow-hidden rounded-xl" style={{ background: "linear-gradient(135deg, var(--brand-bright) 0%, var(--accent) 48%, var(--brand-dark) 100%)" }}>
           {coverImage && <img src={coverImage} alt="" className="absolute inset-0 h-full w-full object-cover" />}
           {coverImage && <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-alpha-overlay-55" />}
           <label className="absolute left-4 top-4 z-10 flex cursor-pointer items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white">
@@ -1807,17 +1810,20 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
 
         {titleError && <p className="-mt-2 mb-3 text-[12px] font-medium text-destructive">{titleError}</p>}
 
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          onInput={(e) => {
-            e.currentTarget.style.height = "auto";
-            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-          }}
-          placeholder="Описание"
-          rows={1}
-          className="mb-5 min-h-12 w-full resize-none overflow-hidden border-b border-border bg-transparent pb-3 text-[14px] leading-5 text-foreground placeholder:text-muted-foreground outline-none"
-        />
+        <div className="mb-5">
+          <label className="mb-2 block text-[13px] leading-4 text-muted-foreground">Описание</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onInput={(e) => {
+              e.currentTarget.style.height = "auto";
+              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+            }}
+            placeholder="Опишите, зачем нужен план, что предстоит делать и какой результат получит участник"
+            rows={3}
+            className="min-h-[88px] w-full resize-none overflow-hidden rounded-lg bg-card px-3.5 py-3.5 text-[14px] leading-5 text-foreground placeholder:text-muted-foreground outline-none"
+          />
+        </div>
 
         <div className="space-y-4">
           <SectionCard>
@@ -2226,29 +2232,29 @@ function CommentsBlock({
   const canSend = comment.trim().length > 0;
 
   return (
-    <div className="border-t border-border bg-surface px-4 pt-[18px] pb-6">
-      <h3 className="mb-3.5 flex items-center gap-2 text-[15px] font-semibold text-foreground">
-        Комментарии <span className="text-[15px] font-normal text-muted-foreground">{comments.length}</span>
+    <div className="rounded-xl border border-white/15 bg-white/15 px-4 pt-[18px] pb-6 text-white backdrop-blur-xl">
+      <h3 className="mb-3.5 flex items-center gap-2 text-[15px] font-semibold text-white">
+        Комментарии <span className="text-[15px] font-normal text-white/65">{comments.length}</span>
       </h3>
       <div className="mb-[18px] flex items-center gap-2.5">
         <img src={UNSPLASH.userAvatar} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-        <div className="flex-1 bg-input rounded-full px-3.5 py-[9px] flex items-center gap-2">
+        <div className="flex-1 rounded-full bg-white/15 px-3.5 py-[9px] flex items-center gap-2">
           <input
             value={comment}
             onChange={e => setComment(e.target.value)}
             placeholder="Напишите комментарий..."
-            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
+            className="flex-1 bg-transparent text-[13px] text-white placeholder:text-white/55 outline-none"
           />
           <button
             onClick={onSend}
             disabled={!canSend}
             className="w-7 h-7 rounded-full flex items-center justify-center transition-opacity"
             style={{
-              backgroundColor: canSend ? GREEN : "var(--muted)",
+              backgroundColor: canSend ? GREEN : "rgba(255,255,255,0.18)",
               opacity: canSend ? 1 : 0.7,
             }}
           >
-            <ChevronRight size={16} strokeWidth={2.3} color={canSend ? "#fff" : "var(--muted-foreground)"} />
+            <ChevronRight size={16} strokeWidth={2.3} color="#fff" />
           </button>
         </div>
       </div>
@@ -2259,17 +2265,17 @@ function CommentsBlock({
               <img src={item.avatarUrl} alt="" className="h-8 w-8 flex-shrink-0 rounded-full object-cover" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2">
-                  <p className="truncate text-[14px] font-medium text-foreground">{item.author}</p>
-                  <span className="text-[12px] text-muted-foreground">{item.time}</span>
+                  <p className="truncate text-[14px] font-medium text-white">{item.author}</p>
+                  <span className="text-[12px] text-white/60">{item.time}</span>
                 </div>
-                <p className="mt-0.5 text-[14px] leading-5 text-foreground">{item.text}</p>
+                <p className="mt-0.5 text-[14px] leading-5 text-white/90">{item.text}</p>
               </div>
             </div>
           ))}
         </div>
       ) : (
         <div className="flex justify-center py-8">
-          <p className="text-[13px] text-muted-foreground">Пока нет комментариев</p>
+          <p className="text-[13px] text-white/65">Пока нет комментариев</p>
         </div>
       )}
     </div>
@@ -2443,7 +2449,13 @@ function EventDetailScreen({
   };
 
   return (
-    <div className="relative flex h-full flex-col bg-surface">
+    <div className="relative flex h-full flex-col overflow-hidden bg-black">
+      {coverSrc ? (
+        <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <div className="absolute inset-0" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }} />
+      )}
+      <div className="absolute inset-0 bg-black/55" />
       {toast && (
         <div
           className="absolute left-1/2 z-30 -translate-x-1/2 rounded-full px-4 py-2 text-[14px] font-medium text-white shadow-lg"
@@ -2453,14 +2465,14 @@ function EventDetailScreen({
         </div>
       )}
 
-      <div className="flex h-14 flex-shrink-0 items-center px-4">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-[15px] font-medium text-foreground">
+      <div className="relative z-10 flex h-14 flex-shrink-0 items-center px-4">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-[15px] font-medium text-white">
           <ArrowLeft size={20} strokeWidth={2} />
           <span>Назад</span>
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="relative z-10 flex-1 overflow-y-auto">
         <div className="px-4">
           <div className="relative aspect-[4/5] overflow-hidden rounded-xl" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }}>
             {coverSrc && (
@@ -2500,20 +2512,22 @@ function EventDetailScreen({
             </div>
           </div>
 
-          <button
-            onClick={toggleJoin}
-            className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[15px]"
-            style={joined ? { backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--foreground)", fontWeight: 500 } : { backgroundColor: GREEN, borderColor: GREEN, color: "#fff", fontWeight: 600 }}
-          >
-            {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color="#fff" />}
-            {joined ? "Вы участвуете" : "Присоединиться"}
-          </button>
+          <div className="mt-4 rounded-xl border border-white/15 bg-white/15 p-3 backdrop-blur-xl">
+            <button
+              onClick={toggleJoin}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[15px]"
+              style={joined ? { backgroundColor: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.22)", color: "#fff", fontWeight: 500 } : { backgroundColor: GREEN, borderColor: GREEN, color: "#fff", fontWeight: 600 }}
+            >
+              {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color="#fff" />}
+              {joined ? "Вы участвуете" : "Присоединиться"}
+            </button>
+          </div>
 
-          <div className="mt-4 border-t border-border pt-4">
+          <div className="mt-3 rounded-xl border border-white/15 bg-white/15 p-4 text-white backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between gap-3">
               <button onClick={organizerAction} className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80">
                 <img src={authorAvatarUrl} alt={authorName} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />
-                <span className="truncate text-[15px] font-medium text-foreground">{authorName}</span>
+                <span className="truncate text-[15px] font-medium text-white">{authorName}</span>
               </button>
               <button
                 onClick={() => setSubscribed((value) => !value)}
@@ -2524,7 +2538,7 @@ function EventDetailScreen({
               </button>
             </div>
 
-            <div className="mb-4 text-[14px] leading-[1.5] text-muted-foreground">
+            <div className="mb-4 text-[14px] leading-[1.5] text-white/85">
               <p
                 style={!descriptionExpanded && needsDescriptionClamp ? {
                   display: "-webkit-box",
@@ -2548,27 +2562,27 @@ function EventDetailScreen({
 
             <div className="space-y-3.5 pb-5">
               <div className="flex items-start gap-3">
-                <Calendar size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
+                <Calendar size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/65" />
                 <div>
-                  <p className="text-[14px] leading-5 text-foreground">{schedulePrimary}</p>
-                  {scheduleSecondary && <p className="text-[13px] leading-4 text-muted-foreground">{scheduleSecondary}</p>}
+                  <p className="text-[14px] leading-5 text-white">{schedulePrimary}</p>
+                  {scheduleSecondary && <p className="text-[13px] leading-4 text-white/65">{scheduleSecondary}</p>}
                 </div>
               </div>
 
               {meta.location && (
                 <div className="flex items-start gap-3">
-                  <MapPin size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
+                  <MapPin size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/65" />
                   <div>
-                    <p className="text-[14px] leading-5 text-foreground">{meta.location}</p>
-                    {meta.locationSub && <p className="text-[13px] leading-4 text-muted-foreground">{meta.locationSub}</p>}
+                    <p className="text-[14px] leading-5 text-white">{meta.location}</p>
+                    {meta.locationSub && <p className="text-[13px] leading-4 text-white/65">{meta.locationSub}</p>}
                   </div>
                 </div>
               )}
 
               <div className="flex items-start gap-3">
-                <Video size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
+                <Video size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/65" />
                 <div>
-                  <p className="text-[14px] leading-5 text-foreground">{formatLabel}</p>
+                  <p className="text-[14px] leading-5 text-white">{formatLabel}</p>
                 </div>
               </div>
 
@@ -2577,16 +2591,16 @@ function EventDetailScreen({
                 className="flex w-full items-center justify-between gap-3 text-left active:opacity-85"
               >
                 <div className="flex items-center gap-3">
-                  <Users size={20} strokeWidth={1.8} className="flex-shrink-0 text-muted-foreground" />
-                  <span className="text-[14px] text-foreground">{meta.participants} участников</span>
+                  <Users size={20} strokeWidth={1.8} className="flex-shrink-0 text-white/65" />
+                  <span className="text-[14px] text-white">{meta.participants} участников</span>
                 </div>
                 <div className="flex -space-x-2">
                   {participantAvatars.slice(0, 3).map((url, i) => (
-                    <img key={i} src={url} alt="" className="h-7 w-7 rounded-full border object-cover" style={{ borderColor: "var(--surface)" }} />
+                    <img key={i} src={url} alt="" className="h-7 w-7 rounded-full border object-cover" style={{ borderColor: "rgba(255,255,255,0.18)" }} />
                   ))}
                   {overflowLabel && (
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted">
-                      <span className="text-[10px] font-bold text-foreground">{overflowLabel}</span>
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
+                      <span className="text-[10px] font-bold text-white">{overflowLabel}</span>
                     </div>
                   )}
                 </div>
@@ -2595,7 +2609,9 @@ function EventDetailScreen({
           </div>
         </div>
 
-        <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
+        <div className="px-4 pt-3 pb-6">
+          <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
+        </div>
       </div>
 
       {sheet === "participants" && (
@@ -3039,6 +3055,7 @@ export default function App() {
         const ev = planEvents[activePlanId];
         const feedPlan = homeFeedPlans.find(plan => plan.id === activePlanId);
         if (feedPlan) {
+          const participantsCount = Number.parseInt(feedPlan.participantsLabel, 10) || feedPlan.participants.length;
           return (
             <EventDetailScreen
               title={feedPlan.title}
@@ -3058,8 +3075,8 @@ export default function App() {
                 time: feedPlan.timeDate,
                 location: feedPlan.address ?? "",
                 locationSub: "",
-                participants: feedPlan.participants.length,
-                plusN: feedPlan.participants.length > 3 ? `+${feedPlan.participants.length - 3}` : "",
+                participants: participantsCount,
+                plusN: participantsCount > feedPlan.participants.length ? `+${participantsCount - feedPlan.participants.length}` : "",
                 joinLabel: "Присоединиться",
               }}
               format={feedPlan.format}
