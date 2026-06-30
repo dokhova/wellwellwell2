@@ -29,6 +29,8 @@
   --component-link: #00887F;
   --alpha-overlay-50: rgb(0 0 0 / 50%);
   --alpha-overlay-55: rgb(0 0 0 / 55%);
+  --brand-bright: #2AD7CA;
+  --brand-dark: #294044;
   --brand-event-bg: rgb(151 174 178 / 15%);
   --brand-date-bg: rgb(0 168 157 / 15%);
   --font-weight-medium: 500;
@@ -116,6 +118,8 @@
   --color-component-link: var(--component-link);
   --color-alpha-overlay-50: var(--alpha-overlay-50);
   --color-alpha-overlay-55: var(--alpha-overlay-55);
+  --color-brand-bright: var(--brand-bright);
+  --color-brand-dark: var(--brand-dark);
   --color-brand-event-bg: var(--brand-event-bg);
   --color-brand-date-bg: var(--brand-date-bg);
   --color-ring: var(--ring);

@@ -34,6 +34,9 @@ import {
   MapPin,
   Users,
   Video,
+  Clock,
+  Repeat2,
+  Flame,
   MessageCircle,
   Check,
   ChevronRight,
@@ -57,6 +60,8 @@ interface Plan {
   place?: string;
   dayIndexes?: number[];
   avatarUrls?: string[];
+  coverUrl?: string;
+  gradient?: string;
   done?: boolean;
 }
 
@@ -414,7 +419,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Ежедневная пробежка", durationMin: 15 },
     coverUrl: planSeed1 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: "daily" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 21 день",
@@ -431,7 +436,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Отбой для гаджетов", durationMin: 60 },
     coverUrl: planSeed2 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: "daily" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Вечер · 14 дней",
@@ -448,7 +453,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Беговая тренировка", durationMin: 30 },
     coverUrl: planSeed3 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 8 недель",
@@ -465,7 +470,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Беговая тренировка + силовая", durationMin: 40 },
     coverUrl: planSeed4 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 8 недель",
@@ -482,7 +487,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Беговая тренировка", durationMin: 45 },
     coverUrl: planSeed5 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 8 недель",
@@ -499,7 +504,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Беговая тренировка", durationMin: 60 },
     coverUrl: planSeed6 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 6], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 6], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 12 недель",
@@ -516,7 +521,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Беговая тренировка", durationMin: 50 },
     coverUrl: planSeed7 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Утро · 10 недель",
@@ -533,7 +538,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Лёгкий выезд", durationMin: 45 },
     coverUrl: planSeed8 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [1, 3, 5], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "День · Бессрочно",
@@ -550,7 +555,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Длинный выезд", durationMin: 90 },
     coverUrl: planSeed9 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [7], repeat: "weekly" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [7], repeat: { type: "weekly" } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "День · Бессрочно",
@@ -567,7 +572,7 @@ const homeFeedPlans: HomeFeedPlan[] = [
     habit: { title: "Медленное дыхание", durationMin: 5 },
     coverUrl: planSeed10 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
-    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: "daily" },
+    schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
     participants: [],
     participantsLabel: "Будь первым",
     timeDate: "Вечер · Бессрочно",
@@ -1138,9 +1143,32 @@ function PlanAvatarStack({ urls }: { urls: string[] }) {
   );
 }
 
+const DAY_PROGRESS_COPY = {
+  empty: {
+    title: "С чего начнём?",
+    subtitle: (count: number) => `${count} ${count === 1 ? "план" : count < 5 ? "плана" : "планов"} на сегодня`,
+  },
+  partial: {
+    title: "Хорошо идёшь",
+    subtitle: (left: number) => `Осталось ${left}`,
+  },
+  done: {
+    title: "День закрыт",
+    subtitle: () => "Все планы выполнены",
+  },
+};
+
+const PLAN_CATEGORY_GRADIENTS: Record<string, string> = {
+  "Бег": "linear-gradient(135deg, var(--brand-bright) 0%, var(--accent) 100%)",
+  "Восстановление": "linear-gradient(135deg, var(--primary) 0%, var(--muted-foreground) 100%)",
+  "Питание": "linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%)",
+  "Другое": "linear-gradient(135deg, var(--muted-foreground) 0%, var(--border) 100%)",
+};
+
 function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?: Screen) => void; onPlanOpen: (id: number) => void }) {
   const [activeDay, setActiveDay] = useState(2);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const toggleCheck = (id: number) => {
     setCheckedItems((prev) =>
@@ -1150,12 +1178,49 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
 
   const todayIndex = 2;
   const selectedDayPlans = plans.filter(plan => (plan.dayIndexes ?? [todayIndex]).includes(activeDay));
-  const selectedDayTitle = `${activeDay === todayIndex ? "Сегодня · " : ""}${weekDays[activeDay]}, ${weekDates[activeDay]} ${weekDateMonths[activeDay]}`;
+  const completedCount = selectedDayPlans.filter((plan) => checkedItems.includes(plan.id)).length;
+  const totalCount = selectedDayPlans.length;
+  const leftCount = Math.max(totalCount - completedCount, 0);
+  const progress = totalCount > 0 ? completedCount / totalCount : 0;
+  const progressPercent = Math.round(progress * 100);
+  const progressCopy =
+    completedCount === 0
+      ? DAY_PROGRESS_COPY.empty
+      : completedCount === totalCount
+        ? DAY_PROGRESS_COPY.done
+        : DAY_PROGRESS_COPY.partial;
+  const progressSubtitle =
+    completedCount === 0
+      ? DAY_PROGRESS_COPY.empty.subtitle(totalCount)
+      : completedCount === totalCount
+        ? DAY_PROGRESS_COPY.done.subtitle()
+        : DAY_PROGRESS_COPY.partial.subtitle(leftCount);
+  const streakDays = weekDays.reduce((count, _day, dayIndex) => {
+    const dayPlans = plans.filter((plan) => (plan.dayIndexes ?? [todayIndex]).includes(dayIndex));
+    return dayPlans.some((plan) => checkedItems.includes(plan.id)) ? count + 1 : count;
+  }, 0);
+
+  const moveDay = (direction: -1 | 1) => {
+    setActiveDay((day) => Math.min(6, Math.max(0, day + direction)));
+  };
+
+  const handleTouchEnd = (x: number) => {
+    if (touchStartX === null) return;
+    const delta = x - touchStartX;
+    if (Math.abs(delta) > 40) {
+      moveDay(delta < 0 ? 1 : -1);
+    }
+    setTouchStartX(null);
+  };
 
   return (
-    <div className="flex flex-col h-full bg-surface">
+    <div
+      className="flex flex-col h-full bg-surface"
+      onTouchStart={(event) => setTouchStartX(event.touches[0]?.clientX ?? null)}
+      onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
+    >
       {/* Week calendar */}
-      <div className="px-3 pt-4 pb-4">
+      <div className="px-3 pt-4 pb-[14px]">
         <div className="grid grid-cols-7 gap-[5px]">
           {weekDays.map((day, i) => {
             const isActive = activeDay === i;
@@ -1164,20 +1229,20 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
               <button
                 key={day}
                 onClick={() => setActiveDay(i)}
-                className="rounded-[14px] py-2 flex flex-col items-center gap-1.5 transition-colors"
+                className="rounded-xl p-[9px] flex flex-col items-center gap-[5px] transition-colors"
                 style={isActive ? { backgroundColor: GREEN } : undefined}
               >
                 <span
-                  className="text-[11px] font-medium"
-                  style={{ color: isActive ? "rgba(255,255,255,0.8)" : "#9CA3AF" }}
+                  className="text-[11px] leading-3"
+                  style={{ color: isActive ? "rgba(255,255,255,0.8)" : "var(--muted-foreground)" }}
                 >
                   {day}
                 </span>
                 <span
-                  className="text-[15px]"
+                  className="text-[15px] leading-5"
                   style={{
-                    color: isActive ? "#fff" : isPast ? "#9CA3AF" : "#111827",
-                    fontWeight: isActive ? 600 : 500,
+                    color: isActive ? "#fff" : isPast ? "var(--muted-foreground)" : "var(--foreground)",
+                    fontWeight: isActive ? 600 : 400,
                   }}
                 >
                   {weekDates[i]}
@@ -1188,50 +1253,74 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-6">
-        <p className="mb-3 text-[13px] leading-4 text-muted-foreground">{selectedDayTitle}</p>
+      {totalCount > 0 && (
+        <div className="px-4 pb-[18px]">
+          <div className="rounded-[16px] p-4" style={{ background: "linear-gradient(135deg, var(--brand-bright) 0%, var(--accent) 100%)" }}>
+            <div className="flex items-center gap-4">
+              <div
+                className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full"
+                style={{ background: `conic-gradient(#fff ${progressPercent}%, rgba(255,255,255,0.3) 0)` }}
+              >
+                <div className="flex h-[50px] w-[50px] items-center justify-center rounded-full" style={{ backgroundColor: GREEN }}>
+                  <span className="text-[15px] font-bold text-white">{completedCount}/{totalCount}</span>
+                </div>
+              </div>
+              <div className="min-w-0 flex-1 text-white">
+                <h2 className="text-[16px] font-semibold leading-6">{progressCopy.title}</h2>
+                <p className="mt-0.5 text-[13px] leading-4 text-white/90">{progressSubtitle}</p>
+                {streakDays > 0 && (
+                  <p className="mt-2 flex items-center gap-1 text-[12px] leading-4 text-white/90">
+                    <Flame size={15} strokeWidth={2} color="#fff" />
+                    {streakDays} дней подряд
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
+      <div className="flex-1 overflow-y-auto px-4 pb-6">
         {selectedDayPlans.length > 0 ? (
           <div className="space-y-2.5">
             {selectedDayPlans.map((plan) => {
               const done = checkedItems.includes(plan.id);
+              const planTime = plan.time.includes("–") ? plan.time.split(" ")[0] : plan.time;
+              const meta = `${planTime} · ${plan.category ?? "Другое"}${plan.place ? ` · ${plan.place}` : ""}`;
+              const gradient = plan.gradient ?? PLAN_CATEGORY_GRADIENTS[plan.category ?? "Другое"] ?? PLAN_CATEGORY_GRADIENTS["Другое"];
               return (
-                <div key={plan.id} className="flex gap-3">
-                  <div className="w-[42px] pt-[13px] flex-shrink-0">
-                    <span className="text-[13px] text-gray-400">{plan.time.includes("–") ? plan.time.split(" ")[0] : plan.time}</span>
+                <button
+                  key={plan.id}
+                  onClick={() => onPlanOpen(plan.id)}
+                  className="flex w-full items-center gap-3 rounded-xl bg-card p-2.5 text-left active:opacity-90"
+                  style={{ opacity: done ? 0.65 : 1 }}
+                >
+                  <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg" style={{ background: gradient }}>
+                    {plan.coverUrl && <img src={plan.coverUrl} alt={plan.title} className="h-full w-full object-cover" />}
                   </div>
-
-                  <button
-                    onClick={() => onPlanOpen(plan.id)}
-                    className="flex-1 rounded-xl bg-card px-3.5 py-3 flex items-center justify-between gap-3 text-left active:opacity-90"
-                    style={{ opacity: done ? 0.7 : 1 }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <h3
-                        className="truncate text-[14px] leading-5 font-medium"
-                        style={{
-                          color: done ? "var(--muted-foreground)" : "var(--foreground)",
-                          textDecoration: done ? "line-through" : "none",
-                        }}
-                      >
-                        {plan.title}
-                      </h3>
-                      <p className="mt-0.5 truncate text-[12px] leading-4 text-muted-foreground">
-                        {plan.category ?? "Другое"}{plan.place ? ` · ${plan.place}` : ""}
-                      </p>
-                    </div>
-                    <span
-                      onClick={(e) => { e.stopPropagation(); toggleCheck(plan.id); }}
-                      className="w-[22px] h-[22px] rounded-full border flex items-center justify-center flex-shrink-0"
+                  <div className="min-w-0 flex-1">
+                    <h3
+                      className="truncate text-[14px] leading-5 font-medium"
                       style={{
-                        borderColor: done ? GREEN : "var(--muted-foreground)",
-                        backgroundColor: done ? GREEN : "transparent",
+                        color: done ? "var(--muted-foreground)" : "var(--foreground)",
+                        textDecoration: done ? "line-through" : "none",
                       }}
                     >
-                      {done && <Check size={13} strokeWidth={3} color="#fff" />}
-                    </span>
-                  </button>
-                </div>
+                      {plan.title}
+                    </h3>
+                    <p className="mt-0.5 truncate text-[12px] leading-4 text-muted-foreground">{meta}</p>
+                  </div>
+                  <span
+                    onClick={(e) => { e.stopPropagation(); toggleCheck(plan.id); }}
+                    className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border"
+                    style={{
+                      borderColor: done ? GREEN : "var(--border)",
+                      backgroundColor: done ? GREEN : "transparent",
+                    }}
+                  >
+                    {done && <Check size={14} strokeWidth={3} color="#fff" />}
+                  </span>
+                </button>
               );
             })}
           </div>
@@ -1240,7 +1329,7 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
             <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: GREEN_LIGHT }}>
               <Calendar size={24} strokeWidth={1.8} color={GREEN} />
             </div>
-            <p className="text-[14px] text-gray-500">На этот день планов нет</p>
+            <p className="text-[14px] text-muted-foreground">На этот день планов нет</p>
             <button
               onClick={() => onNavigate("home")}
               className="mt-3 text-[13px] font-semibold"
@@ -1251,7 +1340,6 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
           </div>
         )}
       </div>
-
     </div>
   );
 }
@@ -1421,8 +1509,12 @@ const PART_OF_DAY_RANGES = {
 
 type TimeMode = "exact" | "partOfDay";
 type PartOfDay = keyof typeof PART_OF_DAY_RANGES;
-type Visibility = "all" | "private";
-type RepeatMode = "none" | "daily" | "weekly" | "untilDate";
+type Visibility = "all" | "onlyMe";
+type PlanRepeat =
+  | { type: "days"; days: number }
+  | { type: "weekly" }
+  | { type: "untilWeek"; week: number }
+  | { type: "forever" };
 type ScheduleEnd =
   | { type: "never" }
   | { type: "date"; date: string }
@@ -1436,13 +1528,13 @@ interface Schedule {
   weekdays: number[];
   end?: ScheduleEnd | string;
   start?: string;
-  repeat?: RepeatMode;
+  repeat?: PlanRepeat;
   repeatUntilDate?: string;
 }
 
 const VISIBILITY_OPTIONS: { value: Visibility; label: string }[] = [
   { value: "all", label: "Все" },
-  { value: "private", label: "Только я" },
+  { value: "onlyMe", label: "Только я" },
 ];
 
 const EVENT_PARTICIPANTS = [
@@ -1513,6 +1605,11 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
     return date.toISOString().slice(0, 16);
   };
 
+  const splitDateTime = (value: string) => {
+    const [date = "", time = ""] = value.split("T");
+    return { date, time };
+  };
+
   const initialDateTime = getLocalDateTime();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -1522,9 +1619,9 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [exactStart, setExactStart] = useState(initialDateTime);
   const [exactEnd, setExactEnd] = useState(initialDateTime);
-  const [repeat, setRepeat] = useState<RepeatMode>("weekly");
-  const [repeatUntilDate, setRepeatUntilDate] = useState("");
+  const [repeat, setRepeat] = useState<PlanRepeat>({ type: "days", days: 21 });
   const [showRepeatPicker, setShowRepeatPicker] = useState(false);
+  const [untilWeek, setUntilWeek] = useState(4);
   const [scheduleError, setScheduleError] = useState("");
   const [titleError, setTitleError] = useState("");
   const [visibility, setVisibility] = useState<Visibility>("all");
@@ -1534,21 +1631,31 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
   const [videoLink, setVideoLink] = useState("");
   const [videoCopied, setVideoCopied] = useState(false);
 
+  const startParts = splitDateTime(exactStart);
+  const endParts = splitDateTime(exactEnd);
   const selectedParticipantItems = EVENT_PARTICIPANTS.filter((participant) =>
     selectedParticipants.includes(participant.id)
   );
 
-  const repeatLabels: Record<RepeatMode, string> = {
-    none: "Не повторять",
-    daily: "Каждый день",
-    weekly: "Каждую неделю",
-    untilDate: repeatUntilDate ? `До ${repeatUntilDate}` : "До даты",
-  };
+  const repeatLabel =
+    repeat.type === "days"
+      ? `${repeat.days} день`
+      : repeat.type === "weekly"
+        ? "Каждую неделю"
+        : repeat.type === "untilWeek"
+          ? `До недели ${repeat.week}`
+          : "Бессрочно";
+
+  const isScheduleValid =
+    timeMode === "partOfDay"
+      ? Boolean(partOfDay) && selectedDays.length > 0
+      : Boolean(exactStart);
+  const isFormValid = title.trim().length > 0 && isScheduleValid;
 
   const switchTimeMode = (mode: TimeMode) => {
     setTimeMode(mode);
-    setRepeat(mode === "partOfDay" ? "weekly" : "none");
     setScheduleError("");
+    if (mode === "exact" && !exactEnd) setExactEnd(exactStart);
   };
 
   const toggleDay = (day: number) => {
@@ -1556,6 +1663,23 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day].sort((a, b) => a - b)
     );
     setScheduleError("");
+  };
+
+  const updateStartPart = (part: "date" | "time", value: string) => {
+    const nextDate = part === "date" ? value : startParts.date;
+    const nextTime = part === "time" ? value : startParts.time;
+    const next = `${nextDate}T${nextTime || "00:00"}`;
+    setExactStart(next);
+    if (!exactEnd || endParts.date === startParts.date) {
+      setExactEnd(`${nextDate}T${endParts.time || nextTime || "00:00"}`);
+    }
+    setScheduleError("");
+  };
+
+  const updateEndPart = (part: "date" | "time", value: string) => {
+    const nextDate = part === "date" ? value : endParts.date || startParts.date;
+    const nextTime = part === "time" ? value : endParts.time;
+    setExactEnd(`${nextDate}T${nextTime || "00:00"}`);
   };
 
   const handleImagePick = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1578,7 +1702,6 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
         partOfDay,
         weekdays: selectedDays,
         repeat,
-        repeatUntilDate: repeat === "untilDate" ? repeatUntilDate : undefined,
       }
     : {
         mode: "exact",
@@ -1589,7 +1712,6 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
         start: exactStart ? new Date(exactStart).toISOString() : "",
         end: exactEnd ? new Date(exactEnd).toISOString() : "",
         repeat,
-        repeatUntilDate: repeat === "untilDate" ? repeatUntilDate : undefined,
       };
 
   const videoMeeting = {
@@ -1604,9 +1726,6 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
     }
     if (timeMode === "exact" && !exactStart) {
       return "Выберите дату и время начала";
-    }
-    if (repeat === "untilDate" && !repeatUntilDate) {
-      return "Выберите дату окончания повтора";
     }
     return "";
   };
@@ -1636,72 +1755,88 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
 
   return (
     <div className="flex h-full flex-col bg-surface">
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-        <div className="rounded-xl bg-card px-3 py-2">
-          {coverImage ? (
-            <div className="flex h-14 items-center gap-3">
-              <img src={coverImage} alt="Обложка плана" className="h-11 w-11 flex-shrink-0 rounded-lg object-cover" />
-              <p className="min-w-0 flex-1 truncate text-[14px] font-medium text-foreground">Обложка добавлена</p>
-              <label className="cursor-pointer rounded-full px-3 py-2 text-[13px] font-medium" style={{ color: GREEN }}>
-                Заменить
-                <input type="file" accept="image/*" className="hidden" onChange={handleImagePick} />
-              </label>
-              <button onClick={() => setCoverImage(null)} className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
-                <Trash2 size={16} strokeWidth={2} color="var(--destructive)" />
-              </button>
-            </div>
-          ) : (
-            <label className="flex h-14 cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border px-3 active:opacity-75">
-              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-muted">
-                <ImageIcon size={18} strokeWidth={2} color={GREEN} />
-              </div>
-              <span className="text-[15px] font-medium text-muted-foreground">Добавить обложку</span>
-              <input type="file" accept="image/*" className="hidden" onChange={handleImagePick} />
-            </label>
-          )}
+      <div className="flex h-14 flex-shrink-0 items-center justify-between px-4">
+        <button onClick={() => onNavigate(backTo)} className="flex h-10 w-10 items-center justify-start">
+          <X size={20} strokeWidth={2.2} color="var(--foreground)" />
+        </button>
+        <h1 className="text-[16px] font-semibold leading-6 text-foreground">Новый план</h1>
+        <button
+          onClick={handleCreate}
+          disabled={!isFormValid}
+          className="text-[15px] font-medium leading-5 disabled:opacity-100"
+          style={{ color: isFormValid ? GREEN : "var(--muted-foreground)" }}
+        >
+          Создать
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 pb-4">
+        <div className="relative mb-4 aspect-[4/5] overflow-hidden rounded-xl" style={{ background: "linear-gradient(135deg, var(--brand-bright) 0%, var(--accent) 48%, var(--brand-dark) 100%)" }}>
+          {coverImage && <img src={coverImage} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+          {coverImage && <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-alpha-overlay-55" />}
+          <label className="absolute left-4 top-4 z-10 flex cursor-pointer items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white">
+            <ImageIcon size={14} strokeWidth={2} />
+            {coverImage ? "Изменить" : "Обложка"}
+            <input type="file" accept="image/*" className="hidden" onChange={handleImagePick} />
+          </label>
+          <label className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center px-8 text-center">
+            <input type="file" accept="image/*" className="hidden" onChange={handleImagePick} />
+            <input
+              value={title}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setTitleError("");
+              }}
+              placeholder="Название плана"
+              className={`w-full bg-transparent text-center font-bold text-white placeholder:text-white/60 outline-none ${coverImage ? "text-[28px] leading-[34px]" : "text-[26px] leading-[34px]"}`}
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+            />
+            {!coverImage && (
+              <>
+                <div className="mt-3 h-px w-24 bg-white/50" />
+                <p className="mt-3 text-[12px] leading-4 text-white/80">Тап, чтобы заполнить</p>
+              </>
+            )}
+          </label>
         </div>
 
-        <div className="rounded-xl bg-card px-4">
-          <input
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              setTitleError("");
-            }}
-            placeholder="Название"
-            className="w-full border-b border-border bg-transparent py-4 text-[22px] font-semibold leading-7 text-foreground placeholder:text-muted-foreground/60 outline-none"
-          />
-          {titleError && <p className="pt-2 text-[12px] font-medium text-destructive">{titleError}</p>}
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            onInput={(e) => {
-              e.currentTarget.style.height = "auto";
-              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-            }}
-            placeholder="Описание"
-            rows={1}
-            className="min-h-14 w-full resize-none overflow-hidden border-b border-border bg-transparent py-4 text-[15px] leading-5 text-foreground placeholder:text-muted-foreground/60 outline-none"
-          />
-        </div>
+        {titleError && <p className="-mt-2 mb-3 text-[12px] font-medium text-destructive">{titleError}</p>}
 
-        <SectionCard>
-          <div className="space-y-5">
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          onInput={(e) => {
+            e.currentTarget.style.height = "auto";
+            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+          }}
+          placeholder="Описание"
+          rows={1}
+          className="mb-5 min-h-12 w-full resize-none overflow-hidden border-b border-border bg-transparent pb-3 text-[14px] leading-5 text-foreground placeholder:text-muted-foreground outline-none"
+        />
+
+        <div className="space-y-4">
+          <SectionCard>
             <div>
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-[15px] font-semibold text-foreground">Время</p>
+                <p className="text-[13px] leading-4 text-muted-foreground">Время</p>
                 <button
                   onClick={() => switchTimeMode(timeMode === "partOfDay" ? "exact" : "partOfDay")}
-                  className="text-[14px] font-medium"
+                  className="flex items-center gap-1.5 text-[14px] font-medium"
                   style={{ color: GREEN }}
                 >
+                  <Clock size={15} strokeWidth={2} />
                   {timeMode === "partOfDay" ? "Точное время" : "Время суток"}
                 </button>
               </div>
 
               {timeMode === "partOfDay" ? (
-                <div className="space-y-4">
-                  <div className="flex gap-2">
+                <>
+                  <div className="grid grid-cols-3 gap-2">
                     {Object.entries(PART_OF_DAY_RANGES).map(([key, item]) => {
                       const active = partOfDay === key;
                       return (
@@ -1711,7 +1846,7 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
                             setPartOfDay(key as PartOfDay);
                             setScheduleError("");
                           }}
-                          className="h-10 flex-1 rounded-full border text-[14px] font-medium transition-colors"
+                          className="rounded-full border px-3 py-2.5 text-[14px] font-medium"
                           style={active ? { backgroundColor: GREEN, borderColor: GREEN, color: "#fff" } : { borderColor: "var(--border)", color: "var(--foreground)" }}
                         >
                           {item.label}
@@ -1720,135 +1855,118 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
                     })}
                   </div>
 
-                  <div className="flex justify-between">
-                    {ALL_DAYS.map((day, i) => {
-                      const value = WEEKDAY_VALUES[i];
-                      const active = selectedDays.includes(value);
-                      return (
-                        <button
-                          key={day}
-                          onClick={() => toggleDay(value)}
-                          className="flex h-10 w-10 items-center justify-center rounded-full border text-[12px] font-semibold transition-colors"
-                          style={active ? { backgroundColor: GREEN, borderColor: GREEN, color: "#fff" } : { borderColor: "var(--border)", color: "var(--foreground)" }}
-                        >
-                          {day}
-                        </button>
-                      );
-                    })}
+                  <div className="mt-[18px]">
+                    <p className="mb-3 text-[13px] leading-4 text-muted-foreground">Дни недели</p>
+                    <div className="grid grid-cols-7 gap-[5px]">
+                      {ALL_DAYS.map((day, i) => {
+                        const value = WEEKDAY_VALUES[i];
+                        const active = selectedDays.includes(value);
+                        return (
+                          <button
+                            key={day}
+                            onClick={() => toggleDay(value)}
+                            className="aspect-square rounded-full border text-[12px] font-semibold"
+                            style={active ? { backgroundColor: GREEN, borderColor: GREEN, color: "#fff" } : { borderColor: "var(--border)", color: "var(--foreground)" }}
+                          >
+                            {day}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                </>
               ) : (
                 <div className="space-y-3">
-                  <label className="block rounded-xl bg-input px-4 py-3">
-                    <span className="mb-2 block text-[12px] font-medium text-muted-foreground">Начало</span>
-                    <input
-                      type="datetime-local"
-                      value={exactStart}
-                      onChange={(e) => {
-                        setExactStart(e.target.value);
-                        setExactEnd((current) => current || e.target.value);
-                        setScheduleError("");
-                      }}
-                      className="w-full bg-transparent text-[15px] font-medium text-foreground outline-none"
-                    />
-                  </label>
-                  <label className="block rounded-xl bg-input px-4 py-3">
-                    <span className="mb-2 block text-[12px] font-medium text-muted-foreground">Окончание</span>
-                    <input
-                      type="datetime-local"
-                      value={exactEnd}
-                      onChange={(e) => {
-                        setExactEnd(e.target.value);
-                        setScheduleError("");
-                      }}
-                      className="w-full bg-transparent text-[15px] font-medium text-foreground outline-none"
-                    />
-                  </label>
+                  {[
+                    { label: "Начало", date: startParts.date, time: startParts.time, onDate: (value: string) => updateStartPart("date", value), onTime: (value: string) => updateStartPart("time", value) },
+                    { label: "Окончание", date: endParts.date || startParts.date, time: endParts.time, onDate: (value: string) => updateEndPart("date", value), onTime: (value: string) => updateEndPart("time", value) },
+                  ].map((row) => (
+                    <div key={row.label} className="rounded-lg border border-border px-3.5 py-3">
+                      <p className="mb-2 text-[13px] font-medium text-foreground">{row.label}</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <label>
+                          <span className="mb-1 block text-[12px] leading-4 text-muted-foreground">Дата</span>
+                          <input type="date" value={row.date} onChange={(e) => row.onDate(e.target.value)} className="w-full bg-transparent text-[14px] leading-5 text-foreground outline-none" />
+                        </label>
+                        <label>
+                          <span className="mb-1 block text-[12px] leading-4 text-muted-foreground">Время</span>
+                          <input type="time" value={row.time} onChange={(e) => row.onTime(e.target.value)} className="w-full bg-transparent text-[14px] leading-5 text-foreground outline-none" />
+                        </label>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
-            </div>
 
-            <div>
-              <button
-                onClick={() => setShowRepeatPicker((show) => !show)}
-                className="flex w-full items-center justify-between rounded-xl bg-input px-4 py-3 text-left"
-              >
-                <span className="text-[15px] font-medium text-foreground">Повторение</span>
-                <span className="flex items-center gap-2 text-[14px] text-muted-foreground">
-                  {repeatLabels[repeat]}
-                  <ChevronDown size={17} strokeWidth={2} />
-                </span>
-              </button>
+              <div className="mt-[18px]">
+                <button
+                  onClick={() => setShowRepeatPicker((show) => !show)}
+                  className="flex w-full items-center justify-between rounded-lg bg-card px-3.5 py-3 text-left"
+                >
+                  <span className="flex items-center gap-2 text-[14px] leading-5 text-foreground">
+                    <Repeat2 size={18} strokeWidth={1.9} color="var(--muted-foreground)" />
+                    Повторение
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[14px] text-muted-foreground">
+                    {repeatLabel}
+                    <ChevronDown size={16} strokeWidth={2} />
+                  </span>
+                </button>
 
-              {showRepeatPicker && (
-                <div className="mt-2 space-y-2 rounded-xl bg-card p-2">
-                  {([
-                    { value: "none" as const, label: "Не повторять" },
-                    { value: "daily" as const, label: "Каждый день" },
-                    { value: "weekly" as const, label: "Каждую неделю" },
-                    { value: "untilDate" as const, label: "До даты" },
-                  ]).map((option) => {
-                    const active = repeat === option.value;
-                    return (
+                {showRepeatPicker && (
+                  <div className="mt-2 rounded-lg bg-card p-2">
+                    {[
+                      { label: "21 день", action: () => setRepeat({ type: "days", days: 21 }), active: repeat.type === "days" },
+                      { label: "Каждую неделю", action: () => setRepeat({ type: "weekly" }), active: repeat.type === "weekly" },
+                      { label: "До недели N", action: () => setRepeat({ type: "untilWeek", week: untilWeek }), active: repeat.type === "untilWeek" },
+                      { label: "Бессрочно", action: () => setRepeat({ type: "forever" }), active: repeat.type === "forever" },
+                    ].map((option) => (
                       <button
-                        key={option.value}
-                        onClick={() => {
-                          setRepeat(option.value);
-                          setScheduleError("");
-                        }}
-                        className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[14px] font-medium"
-                        style={active ? { backgroundColor: GREEN_LIGHT, color: GREEN } : { color: "var(--foreground)" }}
+                        key={option.label}
+                        onClick={option.action}
+                        className="flex w-full items-center justify-between rounded-md px-3 py-2.5 text-left text-[14px] font-medium"
+                        style={option.active ? { backgroundColor: GREEN_LIGHT, color: GREEN } : { color: "var(--foreground)" }}
                       >
                         {option.label}
-                        {active && <Check size={16} strokeWidth={2.4} />}
+                        {option.active && <Check size={16} strokeWidth={2.4} />}
                       </button>
-                    );
-                  })}
-                  {repeat === "untilDate" && (
-                    <input
-                      type="date"
-                      value={repeatUntilDate}
-                      onChange={(e) => {
-                        setRepeatUntilDate(e.target.value);
-                        setScheduleError("");
-                      }}
-                      className="w-full rounded-lg bg-input px-3 py-2.5 text-[14px] font-medium text-foreground outline-none"
-                    />
-                  )}
-                </div>
-              )}
+                    ))}
+                    {repeat.type === "untilWeek" && (
+                      <label className="mt-2 block rounded-md bg-input px-3 py-2.5">
+                        <span className="mb-1 block text-[12px] text-muted-foreground">Номер недели</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={repeat.week}
+                          onChange={(e) => {
+                            const week = Math.max(1, Number(e.target.value) || 1);
+                            setUntilWeek(week);
+                            setRepeat({ type: "untilWeek", week });
+                          }}
+                          className="w-full bg-transparent text-[14px] text-foreground outline-none"
+                        />
+                      </label>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {scheduleError && <p className="mt-3 text-[12px] font-medium text-destructive">{scheduleError}</p>}
             </div>
+          </SectionCard>
 
-            {scheduleError && <p className="text-[12px] font-medium text-destructive">{scheduleError}</p>}
-          </div>
-        </SectionCard>
-
-        <div className="space-y-2">
-          <div className="rounded-xl bg-card px-4 py-3.5">
-            <div className="flex items-center gap-3">
+          <div className="space-y-2">
+            <button
+              onClick={() => setVisibility((value) => value === "all" ? "onlyMe" : "all")}
+              className="flex w-full items-center gap-3 rounded-xl bg-card px-4 py-3.5 text-left"
+            >
               <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-secondary">
                 {visibility === "all" ? <Eye size={17} strokeWidth={1.8} color={GREEN} /> : <Lock size={17} strokeWidth={1.8} color={GREEN} />}
               </div>
-              <p className="flex-1 text-[15px] font-medium text-foreground">Видимость</p>
-              <div className="grid grid-cols-2 gap-1 rounded-lg bg-input p-1">
-                {VISIBILITY_OPTIONS.map((option) => {
-                  const active = visibility === option.value;
-                  return (
-                    <button
-                      key={option.value}
-                      onClick={() => setVisibility(option.value)}
-                      className="h-8 rounded-md px-3 text-[12px] font-semibold whitespace-nowrap"
-                      style={active ? { backgroundColor: GREEN, color: "#fff" } : { color: "var(--muted-foreground)" }}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+              <span className="flex-1 text-[15px] font-medium text-foreground">Видимость</span>
+              <span className="text-[14px] text-muted-foreground">{visibility === "all" ? "Все" : "Только я"}</span>
+            </button>
 
-          <div className="space-y-2">
             <OptionRow
               icon={<Users size={17} strokeWidth={1.8} color={GREEN} />}
               label="Участники"
@@ -1885,9 +2003,7 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
                 })}
               </div>
             )}
-          </div>
 
-          <div className="space-y-2">
             <OptionRow
               icon={<Video size={17} strokeWidth={1.8} color={GREEN} />}
               label="Видеовстреча"
@@ -1900,7 +2016,7 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
                 });
               }}
               control={
-                <div className="h-6 w-11 rounded-full p-0.5 transition-colors" style={{ backgroundColor: videoEnabled ? "var(--component-switch-on, var(--accent))" : "rgba(120,120,128,0.16)" }}>
+                <div className="h-6 w-11 rounded-full p-0.5 transition-colors" style={{ backgroundColor: videoEnabled ? "var(--component-switch-on)" : "var(--component-switch-off)" }}>
                   <div className="h-5 w-5 rounded-full bg-card transition-transform" style={{ transform: videoEnabled ? "translateX(20px)" : "translateX(0)" }} />
                 </div>
               }
@@ -1916,8 +2032,8 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
                       setVideoCopied(true);
                       window.setTimeout(() => setVideoCopied(false), 1200);
                     }}
-                    className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-white"
-                    style={{ backgroundColor: GREEN }}
+                    className="flex h-9 flex-shrink-0 items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold"
+                    style={{ color: GREEN }}
                   >
                     <Copy size={13} strokeWidth={2.2} />
                     {videoCopied ? "Скопировано" : "Копировать"}
@@ -1934,7 +2050,8 @@ function CreateScreen({ onNavigate, backTo = "plans" }: { onNavigate: (s: Screen
       <div className="flex-shrink-0 border-t border-border bg-card px-4 pb-4 pt-3">
         <button
           onClick={handleCreate}
-          className="w-full rounded-xl py-4 text-[15px] font-medium text-white"
+          disabled={!isFormValid}
+          className="h-12 w-full rounded-xl text-[15px] font-semibold text-white disabled:opacity-45"
           style={{ backgroundColor: GREEN }}
         >
           Создать план
