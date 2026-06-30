@@ -1914,25 +1914,19 @@ function CommentsBlock({
 
   return (
     <div
-      className="mx-4 mb-6 rounded-[28px] border px-4 pt-[18px] pb-6 text-white"
-      style={{
-        backgroundColor: "rgba(6,10,18,0.42)",
-        borderColor: "rgba(255,255,255,0.2)",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
-      }}
+      className="border-t border-border bg-surface px-4 pt-[18px] pb-6"
     >
-      <h3 className="mb-3.5 flex items-center gap-2 text-[15px] font-semibold text-white">
-        Комментарии <span className="text-[15px] font-normal text-white/65">{comments.length}</span>
+      <h3 className="mb-3.5 flex items-center gap-2 text-[15px] font-semibold text-foreground">
+        Комментарии <span className="text-[15px] font-normal text-muted-foreground">{comments.length}</span>
       </h3>
       <div className="mb-[18px] flex items-center gap-2.5">
         <img src={UNSPLASH.userAvatar} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-        <div className="flex-1 rounded-full px-3.5 py-[9px] flex items-center gap-2" style={{ backgroundColor: "rgba(255,255,255,0.18)" }}>
+        <div className="flex-1 bg-input rounded-full px-3.5 py-[9px] flex items-center gap-2">
           <input
             value={comment}
             onChange={e => setComment(e.target.value)}
             placeholder="Напишите комментарий..."
-            className="flex-1 bg-transparent text-[13px] text-white placeholder:text-white/55 outline-none"
+            className="flex-1 bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground outline-none"
           />
           <button
             onClick={onSend}
@@ -1954,17 +1948,17 @@ function CommentsBlock({
               <img src={item.avatarUrl} alt="" className="h-8 w-8 flex-shrink-0 rounded-full object-cover" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2">
-                  <p className="truncate text-[14px] font-medium text-white">{item.author}</p>
-                  <span className="text-[12px] text-white/55">{item.time}</span>
+                  <p className="truncate text-[14px] font-medium text-foreground">{item.author}</p>
+                  <span className="text-[12px] text-muted-foreground">{item.time}</span>
                 </div>
-                <p className="mt-0.5 text-[14px] leading-5 text-white/90">{item.text}</p>
+                <p className="mt-0.5 text-[14px] leading-5 text-foreground">{item.text}</p>
               </div>
             </div>
           ))}
         </div>
       ) : (
         <div className="flex justify-center py-8">
-          <p className="text-[13px] text-white/60">Пока нет комментариев</p>
+          <p className="text-[13px] text-muted-foreground">Пока нет комментариев</p>
         </div>
       )}
     </div>
@@ -2138,7 +2132,7 @@ function EventDetailScreen({
   };
 
   return (
-    <div className="relative h-full overflow-hidden bg-card">
+    <div className="relative flex h-full flex-col bg-surface">
       {toast && (
         <div
           className="absolute left-1/2 z-40 -translate-x-1/2 rounded-full px-4 py-2 text-[14px] font-medium text-white shadow-lg"
@@ -2148,96 +2142,85 @@ function EventDetailScreen({
         </div>
       )}
 
-      <div className="h-full overflow-y-auto px-6 py-4">
-        <div className="relative min-h-[calc(100dvh-32px)] overflow-hidden rounded-[28px] bg-black">
-          <div className="absolute inset-0">
-            {coverSrc ? (
-              <img src={coverSrc} alt="" className="h-full w-full object-cover" />
-            ) : (
-              <div className="h-full w-full" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }} />
+      <div className="flex h-14 flex-shrink-0 items-center px-4">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-[15px] font-medium text-foreground active:opacity-80">
+          <ArrowLeft size={20} strokeWidth={2} />
+          <span>Назад</span>
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="px-4 pb-4">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-xl" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }}>
+            {coverSrc && (
+              <img src={coverSrc} alt={title} className="absolute inset-0 h-full w-full object-cover" />
             )}
             <div
               className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.08) 24%, rgba(0,0,0,0.34) 58%, rgba(0,0,0,0.68) 100%)",
-              }}
+              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.10) 46%, rgba(0,0,0,0.55) 100%)" }}
             />
-          </div>
-
-          <button
-            onClick={onBack}
-            className="absolute left-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
-          >
-            <ArrowLeft size={20} strokeWidth={2.1} color="#fff" />
-          </button>
-          <button
-            onClick={() => {
-              setCopied(false);
-              setSheet("share");
-            }}
-            className="absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
-          >
-            <Share2 size={18} strokeWidth={2} color="#fff" />
-          </button>
-          <div className="absolute left-3 top-[62px] z-30 rounded-full bg-black/50 px-3 py-1.5 text-[13px] font-medium text-white">
-            {tagLabel}
-          </div>
-
-          <div className="relative z-10">
-            <div className="flex min-h-[calc(100dvh-32px)] flex-col justify-end px-4 pb-5 pt-[138px]">
-              <div className="flex flex-col items-center text-center">
-                <FeedAvatarStack avatars={participantAvatars} label={participantCountLabel} />
-                <h1
-                  className="mt-3 max-w-full text-[30px] font-bold leading-9 text-white"
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {title}
-                </h1>
+            <div className="absolute left-4 top-4 rounded-full bg-black/50 px-3 py-1.5 text-[13px] font-medium leading-4 text-white">
+              {tagLabel}
+            </div>
+            <button
+              onClick={() => {
+                setCopied(false);
+                setSheet("share");
+              }}
+              className="absolute right-4 top-4 flex h-[34px] w-[34px] items-center justify-center rounded-full bg-black/50 active:opacity-85"
+            >
+              <Share2 size={16} strokeWidth={2} color="#fff" />
+            </button>
+            <div className="absolute inset-x-4 bottom-[18px] flex flex-col items-center text-center">
+              <div className="flex -space-x-2">
+                {participantAvatars.slice(0, 4).map((url, i) => (
+                  <img key={i} src={url} alt="" className="h-[30px] w-[30px] rounded-full border-2 border-white object-cover" />
+                ))}
               </div>
-
-              <button
-                onClick={toggleJoin}
-                className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-[16px] border border-white/75 bg-white text-[15px] active:opacity-90"
-                style={{ color: GREEN, fontWeight: joined ? 500 : 600 }}
-              >
-                {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color={GREEN} />}
-                {joined ? "Вы участвуете" : "Присоединиться"}
-              </button>
-
-              <div
-                className="mt-4 rounded-[28px] border px-4 py-4 text-white"
+              <p className="mt-1.5 text-[12px] leading-4 text-white/85">{participantCountLabel}</p>
+              <h1
+                className="mt-2 max-w-full text-[28px] font-bold leading-[34px] text-white"
                 style={{
-                  backgroundColor: "rgba(6,10,18,0.42)",
-                  borderColor: "rgba(255,255,255,0.2)",
-                  backdropFilter: "blur(24px)",
-                  WebkitBackdropFilter: "blur(24px)",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
+                {title}
+              </h1>
+            </div>
+          </div>
+
+          <button
+            onClick={toggleJoin}
+            className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[15px] active:opacity-90"
+            style={joined ? { backgroundColor: "var(--surface)", borderColor: "var(--border)", color: "var(--foreground)", fontWeight: 500 } : { backgroundColor: GREEN, borderColor: GREEN, color: "#fff", fontWeight: 600 }}
+          >
+            {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color="#fff" />}
+            {joined ? "Вы участвуете" : "Присоединиться"}
+          </button>
+
+          <div className="mt-4 border-t border-border pt-4">
             <div className="mb-4 flex items-center justify-between gap-3">
               <button onClick={organizerAction} className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80">
                 <img src={authorAvatarUrl} alt={authorName} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />
-                <span className="truncate text-[15px] font-medium text-white">{authorName}</span>
+                <span className="truncate text-[15px] font-medium text-foreground">{authorName}</span>
               </button>
               <button
                 onClick={() => setSubscribed((value) => !value)}
-                className="flex-shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold text-white"
-                style={{ borderColor: "rgba(255,255,255,0.52)" }}
+                className="flex-shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-semibold"
+                style={{ borderColor: GREEN, color: GREEN }}
               >
                 {subscribed ? "Подписан" : "Подписаться"}
               </button>
             </div>
 
-            <div className="mb-4 text-[14px] leading-[1.5] text-white/90">
+            <div className="mb-4 text-[14px] leading-[1.5] text-muted-foreground">
               <p
                 style={!descriptionExpanded && needsDescriptionClamp ? {
                   display: "-webkit-box",
-                  WebkitLineClamp: 5,
+                  WebkitLineClamp: 4,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
                 } : undefined}
@@ -2255,41 +2238,29 @@ function EventDetailScreen({
               )}
             </div>
 
-            <div className="mb-4 h-px bg-white/15" />
-
             <div className="space-y-3.5 pb-5">
               <div className="flex items-start gap-3">
-                <Calendar size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
+                <Calendar size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
                 <div>
-                  <p className="text-[14px] leading-5 text-white">{schedulePrimary}</p>
-                  {scheduleSecondary && <p className="text-[13px] leading-4 text-white/65">{scheduleSecondary}</p>}
+                  <p className="text-[14px] leading-5 text-foreground">{schedulePrimary}</p>
+                  {(scheduleSecondary || duration) && <p className="text-[13px] leading-4 text-muted-foreground">{scheduleSecondary || duration}</p>}
                 </div>
               </div>
 
-              {duration && (
-                <div className="flex items-start gap-3">
-                  <Clock size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
-                  <div>
-                    <p className="text-[14px] leading-5 text-white">{duration}</p>
-                    <p className="text-[13px] leading-4 text-white/65">Длительность</p>
-                  </div>
-                </div>
-              )}
-
               {meta.location && (
                 <div className="flex items-start gap-3">
-                  <MapPin size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
+                  <MapPin size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
                   <div>
-                    <p className="text-[14px] leading-5 text-white">{meta.location}</p>
-                    {meta.locationSub && <p className="text-[13px] leading-4 text-white/65">{meta.locationSub}</p>}
+                    <p className="text-[14px] leading-5 text-foreground">{meta.location}</p>
+                    {meta.locationSub && <p className="text-[13px] leading-4 text-muted-foreground">{meta.locationSub}</p>}
                   </div>
                 </div>
               )}
 
               <div className="flex items-start gap-3">
-                <Video size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
+                <Video size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-muted-foreground" />
                 <div>
-                  <p className="text-[14px] leading-5 text-white">{formatLabel}</p>
+                  <p className="text-[14px] leading-5 text-foreground">{formatLabel}</p>
                 </div>
               </div>
 
@@ -2298,24 +2269,27 @@ function EventDetailScreen({
                 className="flex w-full items-center justify-between gap-3 text-left active:opacity-85"
               >
                 <div className="flex items-center gap-3">
-                  <Users size={20} strokeWidth={1.8} className="flex-shrink-0 text-white/70" />
-                  <span className="text-[14px] text-white">{meta.participants} участников</span>
+                  <Users size={20} strokeWidth={1.8} className="flex-shrink-0 text-muted-foreground" />
+                  <span className="text-[14px] text-foreground">{meta.participants} участников</span>
                 </div>
                 <div className="flex items-center">
-                  <ParticipantAvatarLine avatars={participantAvatars} />
+                  <div className="flex -space-x-2">
+                    {participantAvatars.slice(0, 3).map((url, i) => (
+                      <img key={i} src={url} alt="" className="h-7 w-7 rounded-full border object-cover" style={{ borderColor: "var(--surface)" }} />
+                    ))}
+                  </div>
                   {overflowLabel && (
-                    <div className="-ml-2 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-white/20">
-                      <span className="text-[10px] font-bold text-white">{overflowLabel}</span>
+                    <div className="-ml-2 flex h-7 w-7 items-center justify-center rounded-full bg-muted">
+                      <span className="text-[10px] font-bold text-foreground">{overflowLabel}</span>
                     </div>
                   )}
                 </div>
               </button>
             </div>
-              </div>
-            </div>
-            <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
           </div>
         </div>
+
+        <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
       </div>
 
       {sheet === "participants" && (
