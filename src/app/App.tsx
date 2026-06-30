@@ -27,7 +27,6 @@ import {
   MessageCircle,
   Check,
   ChevronRight,
-  ChevronsUpDown,
   Eye,
   Filter,
   Lock,
@@ -44,6 +43,9 @@ interface Plan {
   title: string;
   description: string;
   time: string;
+  category?: string;
+  place?: string;
+  dayIndexes?: number[];
   avatarUrls?: string[];
   done?: boolean;
 }
@@ -76,6 +78,9 @@ const plans: Plan[] = [
     title: "Питание с белком",
     description: "Составить и придерживаться плана питания с роста...",
     time: "9:00 – 9:45",
+    category: "Питание",
+    place: "Онлайн",
+    dayIndexes: [2, 4],
     avatarUrls: [P_AVATARS.w1],
   },
   {
@@ -83,6 +88,9 @@ const plans: Plan[] = [
     title: "Программа весенней подготовки",
     description: "Запланировать тренировки и распределить нагрузк...",
     time: "11:00 – 12:00",
+    category: "Бег",
+    place: "Парк Горького",
+    dayIndexes: [2],
     avatarUrls: [P_AVATARS.m1, P_AVATARS.w2],
   },
   {
@@ -90,12 +98,18 @@ const plans: Plan[] = [
     title: "Купить изотоники в продуктовом",
     description: "Составить список и купить изотоники после трениро...",
     time: "13:30 – 14:00",
+    category: "Восстановление",
+    place: "Магазин",
+    dayIndexes: [2, 5],
   },
   {
     id: 4,
     title: "Звонок с коллегами",
     description: "Обсудить текущие задачи и дедлайны по проектам...",
     time: "16:00 – 17:00",
+    category: "Другое",
+    place: "Онлайн",
+    dayIndexes: [3],
     avatarUrls: [P_AVATARS.m2, P_AVATARS.m3],
   },
   {
@@ -103,6 +117,8 @@ const plans: Plan[] = [
     title: "Челлендж: Вечерний цифровой детокс",
     description: "Отложить гаджеты за 2 часа до сна и заняться отды...",
     time: "21:30 – 22:15",
+    category: "Восстановление",
+    dayIndexes: [0, 1, 2, 3, 4, 5, 6],
   },
 ];
 
@@ -184,13 +200,14 @@ const articleBodies: Record<number, string[]> = {
   ],
 };
 
-const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
-const weekDates = [22, 23, 24, 25, 26, 27, 28];
+const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const weekDates = [29, 30, 1, 2, 3, 4, 5];
+const weekDateMonths = ["июня", "июня", "июля", "июля", "июля", "июля", "июля"];
 
 // ─── Colour tokens ─────────────────────────────────────────────────────────────
 
-const GREEN = "#00887F";
-const GREEN_LIGHT = "#E0F2F1";
+const GREEN = "var(--accent)";
+const GREEN_LIGHT = "var(--secondary)";
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
@@ -326,81 +343,133 @@ function ArticleCard({
   );
 }
 
-type FeedPeriod = "week" | "month" | "all";
-type FeedFilter = "all" | "events" | "challenges" | "private";
+const PLAN_TAGS = ["running", "cycling", "yoga", "recovery", "other"] as const;
+type PlanTag = typeof PLAN_TAGS[number];
+type TagFilter = PlanTag | "all";
 
-interface HomeFeedEvent {
+interface HomeFeedPlan {
   id: number;
-  period: FeedPeriod[];
+  tag?: PlanTag;
   title: string;
+  description: string;
   coverUrl?: string;
   gradient?: string;
-  tags: { label: string; locked?: boolean }[];
-  participantAvatars: string[];
-  participantLabel: string;
+  schedule: Schedule;
+  participants: string[];
+  participantsLabel: string;
   timeDate: string;
   address?: string;
   author: {
     name: string;
     avatarUrl: string;
-    verified?: boolean;
   };
   shareUrl: string;
-  invite?: boolean;
 }
 
-const homeFeedEvents: HomeFeedEvent[] = [
+const PLAN_TAG_LABELS: Record<PlanTag, string> = {
+  running: "Бег",
+  cycling: "Велоспорт",
+  yoga: "Йога",
+  recovery: "Восстановление",
+  other: "Другое",
+};
+
+const homeFeedPlans: HomeFeedPlan[] = [
   {
-    id: 2,
-    period: ["week", "month", "all"],
-    title: "Утренний бег в парке",
+    id: 1,
+    tag: "running",
+    title: "Бег с нуля",
+    description: "Чередуешь бег и ходьбу, чтобы сердце и связки привыкали постепенно. 3 раза в неделю, старт с 1 минуты бега на 2 минуты шага, доля бега растёт каждую неделю. К концу бежишь полчаса без остановки.",
     coverUrl: cover1 as unknown as string,
-    tags: [{ label: "Бег" }],
-    participantAvatars: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantLabel: "100+ чел.",
-    timeDate: "09:45—11:00 · Ср, 1 июля",
-    address: "Парк Горького, Москва, главная аллея",
+    schedule: { timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], end: { type: "weeks", weeks: 8 } },
+    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
+    participantsLabel: "100+ чел.",
+    timeDate: "Утро · 8 недель",
+    address: "3 раза в неделю",
     author: {
       name: "Мария Кузнецова",
       avatarUrl: UNSPLASH.avatarMaria,
-      verified: true,
     },
-    shareUrl: "https://wellwellwell.app/events/2",
+    shareUrl: "https://wellwellwell.app/plans/1",
   },
   {
-    id: 5,
-    period: ["week", "all"],
-    title: "Вечерний цифровой детокс",
-    coverUrl: challengeImg as unknown as string,
-    tags: [{ label: "Челлендж" }],
-    participantAvatars: [],
-    participantLabel: "Будь первым",
-    timeDate: "с 22:00 · Ежедневно",
+    id: 2,
+    tag: "cycling",
+    title: "Вкат в сезон",
+    description: "Низкая интенсивность набирает базу выносливости без перегруза суставов. 3 выезда в неделю по 40-60 минут в темпе, на котором можешь спокойно говорить. Через месяц длинные дистанции даются легче.",
+    coverUrl: cover3 as unknown as string,
+    schedule: { timeMode: "exact", time: "10:00-11:00", partOfDay: null, weekdays: [2, 4, 6], end: { type: "weeks", weeks: 4 } },
+    participants: [P_AVATARS.m1, P_AVATARS.m2],
+    participantsLabel: "2 чел.",
+    timeDate: "40—60 мин · 4 недели",
+    address: "3 выезда в неделю",
     author: {
-      name: "Гена Лохтин",
-      avatarUrl: UNSPLASH.avatarGena,
-      verified: true,
+      name: "Дмитрий Орлов",
+      avatarUrl: UNSPLASH.avatarDmitry,
     },
-    shareUrl: "https://wellwellwell.app/events/5",
+    shareUrl: "https://wellwellwell.app/plans/2",
   },
   {
     id: 3,
-    period: ["week", "month", "all"],
-    title: "Закрытый челлендж без сахара",
-    gradient: "linear-gradient(135deg, #0F766E 0%, #1F2937 48%, #111827 100%)",
-    tags: [{ label: "Закрытый", locked: true }, { label: "Челлендж" }],
-    participantAvatars: [P_AVATARS.m2, P_AVATARS.w2, P_AVATARS.m3],
-    participantLabel: "4 чел.",
-    timeDate: "до 25 июля",
+    tag: "yoga",
+    title: "Мобилизация по утрам",
+    description: "10 минут суставной гимнастики после подъёма разгоняют кровоток и снимают скованность. Комплекс из 8 движений на таз, грудной отдел и голеностоп.",
+    coverUrl: cover2 as unknown as string,
+    schedule: { timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], end: { type: "never" } },
+    participants: [P_AVATARS.w2, P_AVATARS.w1, P_AVATARS.m3],
+    participantsLabel: "4 чел.",
+    timeDate: "Утро · Каждый день",
+    author: {
+      name: "Анна Соколова",
+      avatarUrl: P_AVATARS.w2,
+    },
+    shareUrl: "https://wellwellwell.app/plans/3",
+  },
+  {
+    id: 5,
+    tag: "recovery",
+    title: "Без смартфона перед сном",
+    description: "Экран перед сном бьёт по мелатонину и сдвигает засыпание. Убираешь телефон за час до сна, в 22:00 отбой для гаджетов.",
+    coverUrl: challengeImg as unknown as string,
+    schedule: { timeMode: "exact", time: "22:00-23:00", partOfDay: null, weekdays: [1, 2, 3, 4, 5, 6, 7], end: { type: "weeks", weeks: 2 } },
+    participants: [],
+    participantsLabel: "Будь первым",
+    timeDate: "с 22:00 · 14 дней",
+    author: {
+      name: "Гена Лохтин",
+      avatarUrl: UNSPLASH.avatarGena,
+    },
+    shareUrl: "https://wellwellwell.app/plans/5",
+  },
+  {
+    id: 4,
+    tag: "other",
+    title: "Стакан воды с утра",
+    description: "За ночь теряешь жидкость, утренний стакан возвращает баланс и запускает обмен. 250-300 мл сразу после пробуждения, до кофе.",
+    gradient: "linear-gradient(135deg, #00887F 0%, #2563EB 100%)",
+    schedule: { timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], end: { type: "never" } },
+    participants: [P_AVATARS.m2],
+    participantsLabel: "1 чел.",
+    timeDate: "Утро · Каждый день",
     author: {
       name: "Well Well Well",
       avatarUrl: avatarBrand as unknown as string,
-      verified: true,
     },
-    shareUrl: "https://wellwellwell.app/events/3",
-    invite: true,
+    shareUrl: "https://wellwellwell.app/plans/4",
   },
 ];
+
+const CATEGORY_CHIPS: { label: string; value: TagFilter }[] = [
+  { label: "Все", value: "all" },
+  { label: "Бег", value: "running" },
+  { label: "Велоспорт", value: "cycling" },
+  { label: "Йога", value: "yoga" },
+  { label: "Восстановление", value: "recovery" },
+  { label: "Другое", value: "other" },
+];
+
+const normalizePlanTag = (tag?: string): PlanTag =>
+  PLAN_TAGS.includes(tag as PlanTag) ? (tag as PlanTag) : "other";
 
 function HomeSheet({
   title,
@@ -457,22 +526,20 @@ function FeedAvatarStack({ avatars, label }: { avatars: string[]; label: string 
 }
 
 function FeedEventCard({
-  event,
-  accepted,
+  plan,
   onOpen,
   onAuthor,
   onShare,
   onAuthorMenu,
-  onAccept,
 }: {
-  event: HomeFeedEvent;
-  accepted: boolean;
+  plan: HomeFeedPlan;
   onOpen: () => void;
   onAuthor: () => void;
   onShare: () => void;
   onAuthorMenu: () => void;
-  onAccept: () => void;
 }) {
+  const tag = normalizePlanTag(plan.tag);
+
   return (
     <article>
       <div
@@ -486,24 +553,18 @@ function FeedEventCard({
           }
         }}
         className="relative w-full aspect-[4/5] overflow-hidden rounded-[20px] text-left active:opacity-95"
-        style={{ background: event.gradient ?? "#D1D5DB" }}
+        style={{ background: plan.gradient ?? "#D1D5DB" }}
       >
-        {event.coverUrl && (
-          <img src={event.coverUrl} alt={event.title} className="absolute inset-0 h-full w-full object-cover" />
+        {plan.coverUrl && (
+          <img src={plan.coverUrl} alt={plan.title} className="absolute inset-0 h-full w-full object-cover" />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/75" />
 
         <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-3">
           <div className="flex flex-wrap gap-2">
-            {event.tags.map((tag) => (
-              <span
-                key={tag.label}
-                className="inline-flex items-center rounded-full bg-black/50 px-3.5 py-1.5 text-[13px] font-medium text-white"
-              >
-                {tag.locked && <Lock size={14} strokeWidth={2} className="mr-1.5" />}
-                {tag.label}
-              </span>
-            ))}
+            <span className="inline-flex items-center rounded-full bg-black/50 px-3.5 py-1.5 text-[13px] font-medium text-white">
+              {PLAN_TAG_LABELS[tag]}
+            </span>
           </div>
           <button
             onClick={(e) => {
@@ -516,13 +577,10 @@ function FeedEventCard({
           </button>
         </div>
 
-        <div className="absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2">
-          <FeedAvatarStack avatars={event.participantAvatars} label={event.participantLabel} />
-        </div>
-
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute bottom-4 left-4 right-4 flex flex-col items-center text-center">
+          <FeedAvatarStack avatars={plan.participants} label={plan.participantsLabel} />
           <h2
-            className="text-[30px] font-bold leading-[1.1] text-white"
+            className="mt-3 text-[30px] font-bold leading-[1.1] text-white"
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
@@ -530,23 +588,11 @@ function FeedEventCard({
               overflow: "hidden",
             }}
           >
-            {event.title}
+            {plan.title}
           </h2>
-          <p className="mt-2 truncate text-[15px] text-white/85">{event.timeDate}</p>
-          {event.address && (
-            <p className="mt-1 truncate text-[14px] text-white/75">{event.address}</p>
-          )}
-          {event.invite && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onAccept();
-              }}
-              className="mt-4 h-11 w-full rounded-xl bg-white/20 text-[15px] font-medium text-white flex items-center justify-center gap-2"
-            >
-              <Check size={18} strokeWidth={2.2} />
-              {accepted ? "Приглашение принято" : "Принять приглашение"}
-            </button>
+          <p className="mt-2 max-w-full truncate text-[15px] text-white/85">{plan.timeDate}</p>
+          {plan.address && (
+            <p className="mt-1 max-w-full truncate text-[14px] text-white/75">{plan.address}</p>
           )}
         </div>
       </div>
@@ -556,9 +602,8 @@ function FeedEventCard({
           onClick={onAuthor}
           className="flex min-w-0 flex-1 items-center text-left"
         >
-          <img src={event.author.avatarUrl} alt={event.author.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-          <span className="ml-2.5 truncate text-[15px] font-medium text-gray-900">{event.author.name}</span>
-          {event.author.verified && <span className="ml-1"><BlueBadge /></span>}
+          <img src={plan.author.avatarUrl} alt={plan.author.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+          <span className="ml-2.5 truncate text-[15px] font-medium text-gray-900">{plan.author.name}</span>
         </button>
         <button onClick={onAuthorMenu} className="w-8 h-8 flex items-center justify-end text-gray-400">
           <MoreVertical size={20} strokeWidth={1.9} />
@@ -570,80 +615,81 @@ function FeedEventCard({
 
 function HomeScreen({
   onNavigate,
-  onBack,
   onPlanOpen,
 }: {
   onNavigate: (s: Screen, from?: Screen) => void;
-  onBack: () => void;
   onPlanOpen: (id: number, from?: Screen) => void;
 }) {
-  const [period, setPeriod] = useState<FeedPeriod>("week");
-  const [filter, setFilter] = useState<FeedFilter>("all");
-  const [sheet, setSheet] = useState<"header" | "period" | "filter" | "share" | "author" | null>(null);
-  const [activeEvent, setActiveEvent] = useState<HomeFeedEvent | null>(null);
-  const [acceptedInvites, setAcceptedInvites] = useState<number[]>([]);
+  const [tagFilter, setTagFilter] = useState<TagFilter>("all");
+  const [sheet, setSheet] = useState<"filter" | "share" | "author" | null>(null);
+  const [activePlan, setActivePlan] = useState<HomeFeedPlan | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const periodLabel = period === "week" ? "Неделя" : period === "month" ? "Месяц" : "Все";
-  const visibleEvents = homeFeedEvents.filter((event) => {
-    const matchesPeriod = event.period.includes(period);
-    const hasChallenge = event.tags.some((tag) => tag.label === "Челлендж");
-    const isPrivate = event.tags.some((tag) => tag.locked);
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "events" && !hasChallenge) ||
-      (filter === "challenges" && hasChallenge) ||
-      (filter === "private" && isPrivate);
+  const plansWithTag = homeFeedPlans.map((plan) => ({
+    ...plan,
+    tag: normalizePlanTag(plan.tag),
+  }));
 
-    return matchesPeriod && matchesFilter;
+  const visiblePlans = plansWithTag.filter((plan) => {
+    if (tagFilter === "all") return true;
+    return plan.tag === tagFilter;
   });
 
-  const openShare = (event: HomeFeedEvent) => {
-    setActiveEvent(event);
+  const openShare = (plan: HomeFeedPlan) => {
+    setActivePlan(plan);
     setCopied(false);
     setSheet("share");
   };
 
-  const copyActiveEvent = async () => {
-    if (!activeEvent) return;
-    await navigator.clipboard?.writeText(activeEvent.shareUrl);
+  const copyActivePlan = async () => {
+    if (!activePlan) return;
+    await navigator.clipboard?.writeText(activePlan.shareUrl);
     setCopied(true);
   };
 
-  const openAuthorMenu = (event: HomeFeedEvent) => {
-    setActiveEvent(event);
+  const openAuthorMenu = (plan: HomeFeedPlan) => {
+    setActivePlan(plan);
     setSheet("author");
   };
 
   return (
     <div className="relative flex flex-col h-full" style={{ backgroundColor: "#F0F1F3" }}>
       {/* Header */}
-      <div className="h-14 flex items-center justify-between px-4">
-        <button
-          onClick={onBack}
-          className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center"
-        >
-          <ArrowLeft size={20} strokeWidth={2.1} color="#111827" />
-        </button>
+      <div className="h-14 flex items-center justify-center px-4">
         <div className="text-center leading-none">
           <p className="text-[17px] font-semibold text-gray-900">WellWellWell</p>
           <p className="mt-0.5 text-[12px] text-gray-400">mini app</p>
         </div>
-        <button
-          onClick={() => setSheet("header")}
-          className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center"
-        >
-          <MoreVertical size={20} strokeWidth={2} color="#111827" />
-        </button>
       </div>
 
-      {/* Filter row */}
-      <div className="h-12 px-4 flex items-center justify-between">
-        <button onClick={() => setSheet("period")} className="flex items-center gap-1">
-          <span className="text-[22px] font-bold text-gray-900">{periodLabel}</span>
-          <ChevronsUpDown size={16} strokeWidth={2} color="#111827" />
-        </button>
-        <div className="flex items-center gap-4">
+      {/* Category row */}
+      <div className="h-12 pl-4 flex items-center">
+        <div className="min-w-0 flex-1 overflow-x-auto pr-3">
+          <div className="flex gap-2">
+            {CATEGORY_CHIPS.map((chip) => {
+              const active = tagFilter === chip.value;
+              return (
+                <button
+                  key={chip.value}
+                  onClick={() => setTagFilter(chip.value)}
+                  className="h-9 flex-shrink-0 rounded-full border px-3.5 text-[13px] font-medium transition-colors"
+                  style={
+                    active
+                      ? { backgroundColor: GREEN, borderColor: GREEN, color: "#fff" }
+                      : { backgroundColor: "#fff", borderColor: "#D1D5DB", color: "#374151" }
+                  }
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div
+          className="w-7 h-12 flex-shrink-0"
+          style={{ background: "linear-gradient(90deg, rgba(240,241,243,0), #F0F1F3)" }}
+        />
+        <div className="flex items-center gap-4 pr-4 flex-shrink-0">
           <button onClick={() => setSheet("filter")} className="w-6 h-6 flex items-center justify-center">
             <Filter size={24} strokeWidth={1.9} color="#111827" />
           </button>
@@ -655,81 +701,74 @@ function HomeScreen({
 
       {/* Feed */}
       <div className="flex-1 overflow-y-auto px-4 pt-2 pb-6 space-y-6">
-        {visibleEvents.map((event) => (
-          <FeedEventCard
-            key={event.id}
-            event={event}
-            accepted={acceptedInvites.includes(event.id)}
-            onOpen={() => onPlanOpen(event.id, "home")}
-            onAuthor={() => onNavigate("profile")}
-            onShare={() => openShare(event)}
-            onAuthorMenu={() => openAuthorMenu(event)}
-            onAccept={() => setAcceptedInvites((prev) => prev.includes(event.id) ? prev : [...prev, event.id])}
-          />
-        ))}
-      </div>
-
-      {sheet === "header" && (
-        <HomeSheet title="Меню" onClose={() => setSheet(null)}>
-          <div className="space-y-2">
-            <button onClick={() => { setSheet(null); onNavigate("create", "home"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Создать событие</button>
-            <button onClick={() => { setSheet(null); onNavigate("profile"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Профиль</button>
-          </div>
-        </HomeSheet>
-      )}
-
-      {sheet === "period" && (
-        <HomeSheet title="Период" onClose={() => setSheet(null)}>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { value: "week" as const, label: "Неделя" },
-              { value: "month" as const, label: "Месяц" },
-              { value: "all" as const, label: "Все" },
-            ].map((item) => (
+        {visiblePlans.length > 0 ? (
+          visiblePlans.map((plan) => (
+            <FeedEventCard
+              key={plan.id}
+              plan={plan}
+              onOpen={() => onPlanOpen(plan.id, "home")}
+              onAuthor={() => onNavigate("profile")}
+              onShare={() => openShare(plan)}
+              onAuthorMenu={() => openAuthorMenu(plan)}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-[20px] bg-white px-6 py-14 text-center">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: GREEN_LIGHT }}>
+              <Filter size={22} strokeWidth={1.8} color={GREEN} />
+            </div>
+            <h3 className="text-[17px] font-semibold text-gray-900">
+              {tagFilter === "all"
+                ? "Событий пока нет"
+                : tagFilter === "running"
+                  ? "Забегов пока нет"
+                  : tagFilter === "cycling"
+                    ? "Заездов пока нет"
+                    : tagFilter === "yoga"
+                      ? "Занятий пока нет"
+                      : tagFilter === "recovery"
+                        ? "Событий пока нет"
+                        : "Тут пока пусто"}
+            </h3>
+            <p className="mt-2 text-[14px] leading-relaxed text-gray-400">
+              {tagFilter === "all"
+                ? "Скоро тут появятся события"
+                : "Загляни позже или посмотри события в других категориях"}
+            </p>
+            {tagFilter !== "all" && (
               <button
-                key={item.value}
-                onClick={() => { setPeriod(item.value); setSheet(null); }}
-                className="h-11 rounded-xl text-[14px] font-semibold"
-                style={period === item.value ? { backgroundColor: GREEN, color: "#fff" } : { backgroundColor: "#F3F4F6", color: "#374151" }}
+                onClick={() => setTagFilter("all")}
+                className="mt-5 h-11 rounded-full px-5 text-[14px] font-semibold text-white"
+                style={{ backgroundColor: GREEN }}
               >
-                {item.label}
+                Показать все
               </button>
-            ))}
+            )}
           </div>
-        </HomeSheet>
-      )}
+        )}
+      </div>
 
       {sheet === "filter" && (
         <HomeSheet title="Фильтры" onClose={() => setSheet(null)}>
           <div className="space-y-2">
-            {[
-              { value: "all" as const, label: "Все" },
-              { value: "events" as const, label: "События" },
-              { value: "challenges" as const, label: "Челленджи" },
-              { value: "private" as const, label: "Закрытые" },
-            ].map((item) => (
+            {["Дата", "Популярные", "Рядом"].map((item) => (
               <button
-                key={item.value}
-                onClick={() => {
-                  setFilter(item.value);
-                  setSheet(null);
-                }}
-                className="w-full rounded-2xl px-4 py-3 text-left text-[15px] font-medium flex items-center justify-between"
-                style={filter === item.value ? { backgroundColor: GREEN_LIGHT, color: GREEN } : { backgroundColor: "#F3F4F6", color: "#111827" }}
+                key={item}
+                onClick={() => setSheet(null)}
+                className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900"
               >
-                {item.label}
-                {filter === item.value && <Check size={16} strokeWidth={2.4} />}
+                {item}
               </button>
             ))}
           </div>
         </HomeSheet>
       )}
 
-      {sheet === "share" && activeEvent && (
+      {sheet === "share" && activePlan && (
         <HomeSheet title="Поделиться" onClose={() => setSheet(null)}>
-          <p className="mb-3 truncate text-[14px] text-gray-500">{activeEvent.title}</p>
+          <p className="mb-3 truncate text-[14px] text-gray-500">{activePlan.title}</p>
           <button
-            onClick={copyActiveEvent}
+            onClick={copyActivePlan}
             className="h-12 w-full rounded-2xl text-[15px] font-semibold text-white flex items-center justify-center gap-2"
             style={{ backgroundColor: GREEN }}
           >
@@ -739,8 +778,8 @@ function HomeScreen({
         </HomeSheet>
       )}
 
-      {sheet === "author" && activeEvent && (
-        <HomeSheet title={activeEvent.author.name} onClose={() => setSheet(null)}>
+      {sheet === "author" && activePlan && (
+        <HomeSheet title={activePlan.author.name} onClose={() => setSheet(null)}>
           <div className="space-y-2">
             <button onClick={() => { setSheet(null); onNavigate("profile"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Открыть профиль</button>
             <button onClick={() => setSheet(null)} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Пожаловаться</button>
@@ -1009,6 +1048,193 @@ function PlanAvatarStack({ urls }: { urls: string[] }) {
 }
 
 function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?: Screen) => void; onPlanOpen: (id: number) => void }) {
+  const [activeTab, setActiveTab] = useState(0);
+  const [activeDay, setActiveDay] = useState(2);
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+
+  const toggleCheck = (id: number) => {
+    setCheckedItems((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const todayIndex = 2;
+  const selectedDayPlans = plans.filter(plan => (plan.dayIndexes ?? [todayIndex]).includes(activeDay));
+  const monthLabel = "Июль 2026";
+  const selectedDayTitle = `${activeDay === todayIndex ? "Сегодня · " : ""}${weekDays[activeDay]}, ${weekDates[activeDay]} ${weekDateMonths[activeDay]}`;
+  const hasPlansByDay = (dayIndex: number) =>
+    plans.some(plan => (plan.dayIndexes ?? [todayIndex]).includes(dayIndex));
+
+  return (
+    <div className="flex flex-col h-full bg-surface">
+      <div className="h-14 px-4 flex items-center justify-between">
+        <h1 className="text-[22px] font-bold text-gray-900">Мои планы</h1>
+        <button
+          onClick={() => setActiveDay(todayIndex)}
+          className="w-9 h-9 rounded-full flex items-center justify-center"
+        >
+          <Calendar size={22} strokeWidth={1.8} color="#6B7280" />
+        </button>
+      </div>
+
+      <div className="h-10 px-4 flex items-center justify-between">
+        <button
+          onClick={() => setActiveDay(day => Math.max(0, day - 1))}
+          className="w-8 h-8 flex items-center justify-center text-gray-400"
+          style={{ opacity: activeDay === 0 ? 0.35 : 1 }}
+        >
+          <ChevronRight size={18} strokeWidth={2} className="rotate-180" />
+        </button>
+        <p className="text-[14px] font-medium text-gray-700">{monthLabel}</p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setActiveDay(day => Math.min(6, day + 1))}
+            className="w-8 h-8 flex items-center justify-center text-gray-400"
+            style={{ opacity: activeDay === 6 ? 0.35 : 1 }}
+          >
+            <ChevronRight size={18} strokeWidth={2} />
+          </button>
+          <div className="flex rounded-xl bg-gray-200/70 p-0.5">
+            {["Планы", "Аналитика"].map((tab, i) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(i)}
+                className="h-7 rounded-lg px-3 text-[12px] font-semibold"
+                  style={i === activeTab ? { backgroundColor: "var(--card)", color: GREEN } : { color: "var(--muted-foreground)" }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Week calendar */}
+      <div className="px-3 pb-4" style={{ display: activeTab === 1 ? "none" : undefined }}>
+        <div className="grid grid-cols-7 gap-[5px]">
+          {weekDays.map((day, i) => {
+            const isActive = activeDay === i;
+            const hasPlans = hasPlansByDay(i);
+            const isPast = i < todayIndex;
+            return (
+              <button
+                key={day}
+                onClick={() => setActiveDay(i)}
+                className="rounded-[14px] py-2 flex flex-col items-center gap-1.5 transition-colors"
+                style={isActive ? { backgroundColor: GREEN } : undefined}
+              >
+                <span
+                  className="text-[11px] font-medium"
+                  style={{ color: isActive ? "rgba(255,255,255,0.8)" : "#9CA3AF" }}
+                >
+                  {day}
+                </span>
+                <span
+                  className="text-[15px]"
+                  style={{
+                    color: isActive ? "#fff" : isPast ? "#9CA3AF" : "#111827",
+                    fontWeight: isActive ? 600 : 500,
+                  }}
+                >
+                  {weekDates[i]}
+                </span>
+                <span
+                  className="w-1 h-1 rounded-full"
+                  style={{ backgroundColor: isActive ? "#fff" : hasPlans ? GREEN : "transparent" }}
+                />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {activeTab === 1 && <AnalyticsScreen />}
+
+      <div className="flex-1 overflow-y-auto px-4 pb-6" style={{ display: activeTab === 1 ? "none" : undefined }}>
+        <p className="mb-3 text-[13px] leading-4 text-muted-foreground">{selectedDayTitle}</p>
+
+        {selectedDayPlans.length > 0 ? (
+          <div className="space-y-2.5">
+            {selectedDayPlans.map((plan) => {
+              const done = checkedItems.includes(plan.id);
+              return (
+                <div key={plan.id} className="flex gap-3">
+                  <div className="w-[42px] pt-[13px] flex-shrink-0">
+                    <span className="text-[13px] text-gray-400">{plan.time.includes("–") ? plan.time.split(" ")[0] : plan.time}</span>
+                  </div>
+
+                  <button
+                    onClick={() => onPlanOpen(plan.id)}
+                    className="flex-1 rounded-xl bg-card px-3.5 py-3 flex items-center justify-between gap-3 text-left active:opacity-90"
+                    style={{ opacity: done ? 0.7 : 1 }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        className="truncate text-[14px] leading-5 font-medium"
+                        style={{
+                          color: done ? "var(--muted-foreground)" : "var(--foreground)",
+                          textDecoration: done ? "line-through" : "none",
+                        }}
+                      >
+                        {plan.title}
+                      </h3>
+                      <p className="mt-0.5 truncate text-[12px] leading-4 text-muted-foreground">
+                        {plan.category ?? "Другое"}{plan.place ? ` · ${plan.place}` : ""}
+                      </p>
+                    </div>
+                    <span
+                      onClick={(e) => { e.stopPropagation(); toggleCheck(plan.id); }}
+                      className="w-[22px] h-[22px] rounded-full border flex items-center justify-center flex-shrink-0"
+                      style={{
+                        borderColor: done ? GREEN : "var(--muted-foreground)",
+                        backgroundColor: done ? GREEN : "transparent",
+                      }}
+                    >
+                      {done && <Check size={13} strokeWidth={3} color="#fff" />}
+                    </span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="pt-10 flex flex-col items-center text-center">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: GREEN_LIGHT }}>
+              <Calendar size={24} strokeWidth={1.8} color={GREEN} />
+            </div>
+            <p className="text-[14px] text-gray-500">На этот день планов нет</p>
+            <button
+              onClick={() => onNavigate("home")}
+              className="mt-3 text-[13px] font-semibold"
+              style={{ color: GREEN }}
+            >
+              Посмотреть каталог
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* FAB */}
+      <div className="relative h-0" style={{ display: activeTab === 1 ? "none" : undefined }}>
+        <button
+          onClick={() => onNavigate("create")}
+          className="absolute w-14 h-14 rounded-full flex items-center justify-center z-10"
+          style={{
+            backgroundColor: GREEN,
+            bottom: 16,
+            right: 16,
+            boxShadow: "0 6px 20px rgba(0,136,127,0.45)",
+          }}
+        >
+          <Plus size={26} strokeWidth={2.5} color="#fff" />
+        </button>
+      </div>
+
+    </div>
+  );
+}
+
+function PlansScreenOld({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?: Screen) => void; onPlanOpen: (id: number) => void }) {
   const [activeTab, setActiveTab] = useState(0);
   const [activeDay, setActiveDay] = useState(5);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
@@ -1937,18 +2163,18 @@ function BlueBadge() {
 
 function CommentsBlock({ comment, setComment }: { comment: string; setComment: (v: string) => void }) {
   return (
-    <div className="px-4 pt-4 pb-6 space-y-4">
-      <h3 className="text-[15px] font-semibold text-gray-900">
-        Комментарии <span className="text-gray-400 font-normal text-[14px]">0</span>
+    <div className="bg-surface px-4 pt-[18px] pb-6">
+      <h3 className="text-[15px] font-semibold text-gray-900 mb-3.5 flex items-center gap-2">
+        Комментарии <span className="text-[15px] font-normal text-gray-400">0</span>
       </h3>
-      <div className="flex items-center gap-3">
-        <img src={UNSPLASH.userAvatar} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-        <div className="flex-1 bg-gray-100 rounded-2xl px-4 py-2.5 flex items-center gap-2">
+      <div className="flex items-center gap-2.5 mb-[18px]">
+        <img src={UNSPLASH.userAvatar} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+        <div className="flex-1 bg-input rounded-full px-3.5 py-[9px] flex items-center gap-2">
           <input
             value={comment}
             onChange={e => setComment(e.target.value)}
             placeholder="Напишите комментарий..."
-            className="flex-1 bg-transparent text-[14px] text-gray-700 placeholder-gray-400 outline-none"
+            className="flex-1 bg-transparent text-[13px] text-gray-700 placeholder-gray-400 outline-none"
           />
           <button className="flex-shrink-0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -2005,7 +2231,8 @@ function CollapsibleText({ paragraphs }: { paragraphs: string[] }) {
 
 interface EventDetailProps {
   title: string;
-  coverSrc: string;
+  coverSrc?: string;
+  backgroundGradient?: string;
   authorName: string;
   authorAvatarUrl: string;
   authorVerified?: boolean;
@@ -2015,127 +2242,191 @@ interface EventDetailProps {
   meta: EventMeta;
   onBack: () => void;
   initiallyJoined?: boolean;
+  onProfile?: () => void;
 }
 
 function EventDetailScreen({
-  title, coverSrc, authorName, authorAvatarUrl, authorVerified,
-  readTime, badgeDate, paragraphs, meta, onBack, initiallyJoined,
+  title, coverSrc, backgroundGradient, authorName, authorAvatarUrl, authorVerified,
+  readTime, badgeDate, paragraphs, meta, onBack, initiallyJoined, onProfile,
 }: EventDetailProps) {
   const [joined, setJoined] = useState(initiallyJoined ?? false);
+  const [sheet, setSheet] = useState<"participants" | "profile" | null>(null);
   const [subscribed, setSubscribed] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [comment, setComment] = useState("");
+  const description = paragraphs.join(" ");
+  const participantAvatars = DETAIL_AVATARS;
+  const organizerAction = onProfile ?? (() => setSheet("profile"));
+  const needsDescriptionClamp = description.length > 260;
 
   return (
-    <div className="flex flex-col h-full" style={{ backgroundColor: "#F0F1F3" }}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-3 bg-white border-b border-gray-100">
-        <button onClick={onBack} className="w-8 h-8 flex items-center justify-center">
-          <ArrowLeft size={22} strokeWidth={2} />
-        </button>
-        <span className="text-[16px] font-semibold truncate max-w-[180px]">{authorName}</span>
-        <div className="flex gap-1">
-          <button className="w-8 h-8 flex items-center justify-center">
-            <ChevronDown size={20} strokeWidth={2} />
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center">
-            <MoreVertical size={20} strokeWidth={2} />
-          </button>
-        </div>
-      </div>
+    <div className="relative h-full overflow-hidden bg-black">
+      {coverSrc ? (
+        <img src={coverSrc} alt={title} className="fixed inset-0 h-[100dvh] w-full object-cover" />
+      ) : (
+        <div className="fixed inset-0 h-[100dvh]" style={{ background: backgroundGradient ?? `linear-gradient(135deg, ${GREEN} 0%, #111827 100%)` }} />
+      )}
+      <div
+        className="fixed inset-0 min-h-[100dvh]"
+        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0) 28%, rgba(0,0,0,0.30) 62%, rgba(0,0,0,0.55) 100%)" }}
+      />
 
-      <div className="flex-1 overflow-y-auto">
-        {/* Badge */}
-        <div className="flex justify-center pt-4 pb-2">
-          <span className="text-[12px] text-gray-400 bg-white px-3 py-1 rounded-full shadow-sm">
-            {badgeDate}
-          </span>
-        </div>
+      <button
+        onClick={onBack}
+        className="absolute left-4 z-20 w-10 h-10 rounded-full bg-black/35 flex items-center justify-center"
+        style={{ top: "calc(env(safe-area-inset-top) + 12px)" }}
+      >
+        <ArrowLeft size={20} strokeWidth={2} color="#fff" />
+      </button>
 
-        {/* Main card */}
-        <div className="mx-4 bg-white rounded-3xl overflow-hidden shadow-sm mb-4">
-          <img src={coverSrc} alt={title} className="w-full h-48 object-cover" />
+      <div className="relative z-10 h-full overflow-y-auto">
+        <div className="min-h-[62vh] px-6 pt-20 pb-[22px] flex flex-col items-center justify-end text-center">
+          <h1
+            className="max-w-[345px] text-[30px] leading-9 font-bold text-white"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {title}
+          </h1>
 
-          <div className="px-5 py-5 space-y-4">
-            {/* Author */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <img src={authorAvatarUrl} alt={authorName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[14px] font-semibold text-gray-900">{authorName}</span>
-                    {authorVerified && <BlueBadge />}
-                  </div>
-                  {readTime && <p className="text-[11px] text-gray-400">{readTime}</p>}
+          <div className="mt-4 max-w-[345px] text-[16px] leading-[1.4] text-white/90">
+            <p>{meta.time} · {meta.date}</p>
+            {meta.location && meta.location !== "Онлайн" && (
+              <p>{meta.location}</p>
+            )}
+          </div>
+
+          <div className="mt-[26px] w-full max-w-[345px] rounded-full bg-white/10 p-1 flex items-stretch backdrop-blur-sm">
+            {[
+              { value: "going" as const, label: "Иду", Icon: Check },
+              { value: "notGoing" as const, label: "Не иду", Icon: X },
+            ].map((item) => {
+              const active = item.value === "going" ? joined : !joined;
+              const Icon = item.Icon;
+              return (
+                <div key={item.value} className="flex flex-1 items-center">
+                  <button
+                    onClick={() => setJoined(item.value === "going")}
+                    className="py-[11px] flex-1 rounded-[26px] flex flex-col items-center justify-center gap-[5px] transition-colors"
+                    style={active ? { backgroundColor: "#fff", color: GREEN } : { color: "rgba(255,255,255,0.85)" }}
+                  >
+                    <Icon size={20} strokeWidth={2.2} />
+                    <span className="text-[15px] font-semibold">{item.label}</span>
+                  </button>
                 </div>
-              </div>
-              <button
-                onClick={() => setSubscribed(!subscribed)}
-                className="px-4 py-1.5 rounded-full text-[12px] font-semibold text-white"
-                style={{ backgroundColor: subscribed ? "#007A72" : GREEN }}
-              >
-                {subscribed ? "ПОДПИСАН" : "ПОДПИСАТЬСЯ"}
-              </button>
-            </div>
-
-            {/* Title */}
-            <h1 className="text-[19px] font-bold text-gray-900 leading-snug">{title}</h1>
-
-            {/* Collapsible description */}
-            <CollapsibleText paragraphs={paragraphs} />
-
-            {/* Divider */}
-            <div className="border-t border-gray-100" />
-
-            {/* Details */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Calendar size={20} strokeWidth={1.7} color={GREEN} />
-                <div>
-                  <p className="text-[13px] font-semibold text-gray-800">{meta.date}</p>
-                  <p className="text-[12px] text-gray-400">{meta.time}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin size={20} strokeWidth={1.7} color={GREEN} />
-                <div>
-                  <p className="text-[13px] font-semibold text-gray-800">{meta.location}</p>
-                  <p className="text-[12px] text-gray-400">{meta.locationSub}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Users size={20} strokeWidth={1.7} color={GREEN} />
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {DETAIL_AVATARS.map((url, i) => (
-                      <img key={i} src={url} alt="" className="w-6 h-6 rounded-full border-2 border-white object-cover" />
-                    ))}
-                    <div className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center">
-                      <span className="text-[8px] font-bold text-gray-500">{meta.plusN}</span>
-                    </div>
-                  </div>
-                  <p className="text-[13px] font-semibold text-gray-800">{meta.participants} участников</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Join button */}
-            <button
-              onClick={() => setJoined(!joined)}
-              className="w-full py-3.5 rounded-2xl text-white text-[15px] font-semibold flex items-center justify-center gap-2"
-              style={{ backgroundColor: joined ? "#007A72" : GREEN }}
-            >
-              <div className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
-                {joined
-                  ? <Check size={11} strokeWidth={3} color="#fff" />
-                  : <Plus size={11} strokeWidth={3} color="#fff" />}
-              </div>
-              {joined ? "Вы присоединились" : meta.joinLabel}
-            </button>
+              );
+            })}
           </div>
         </div>
 
-        <CommentsBlock comment={comment} setComment={setComment} />
+        <div className="relative">
+          <div className="rounded-t-xl bg-white/15 px-[18px] pt-5 pb-5 text-white backdrop-blur-xl">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <button onClick={organizerAction} className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80">
+                <img src={authorAvatarUrl} alt={authorName} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                <span className="truncate text-[15px] font-medium text-white">{authorName}</span>
+              </button>
+              <button
+                onClick={() => setSubscribed((value) => !value)}
+                className="rounded-full border px-3.5 py-[7px] text-[12px] font-semibold uppercase tracking-[0.4px] text-white flex-shrink-0"
+                style={{ borderColor: "rgba(255,255,255,0.5)" }}
+              >
+                {subscribed ? "Подписан" : "Подписаться"}
+              </button>
+            </div>
+
+            <div className="mb-4 text-[14px] leading-[1.5] text-white/90">
+              <p
+                style={!descriptionExpanded && needsDescriptionClamp ? {
+                  display: "-webkit-box",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                } : undefined}
+              >
+                {description}
+              </p>
+              {needsDescriptionClamp && (
+                <button
+                  onClick={() => setDescriptionExpanded((value) => !value)}
+                  className="inline text-[14px] font-medium"
+                  style={{ color: GREEN }}
+                >
+                  {descriptionExpanded ? "Свернуть" : "Подробнее"}
+                </button>
+              )}
+            </div>
+
+            <div className="mb-4 h-px bg-white/20" style={{ height: 0.5 }} />
+
+            <div className="mb-3.5 flex items-start gap-3">
+              <Calendar size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
+              <div>
+                <p className="text-[14px] text-white">{meta.date}</p>
+                <p className="text-[13px] text-white/65">{meta.time}</p>
+              </div>
+            </div>
+
+            {meta.location && (
+              <div className="mb-4 flex items-start gap-3">
+                <MapPin size={20} strokeWidth={1.8} className="mt-0.5 flex-shrink-0 text-white/70" />
+                <div>
+                  <p className="text-[14px] text-white">{meta.location}</p>
+                  {meta.locationSub && <p className="text-[13px] text-white/65">{meta.locationSub}</p>}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={() => setSheet("participants")}
+              className="w-full flex items-center justify-between gap-3 text-left active:opacity-85"
+            >
+              <div className="flex items-center gap-3">
+                <Users size={20} strokeWidth={1.8} className="flex-shrink-0 text-white/70" />
+                <span className="text-[14px] text-white">{meta.participants} участников</span>
+              </div>
+              <div className="flex -space-x-2">
+                {participantAvatars.slice(0, 3).map((url, i) => (
+                  <img key={i} src={url} alt="" className="w-7 h-7 rounded-full border object-cover" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
+                ))}
+                <div className="w-7 h-7 rounded-full border bg-white/20 flex items-center justify-center" style={{ borderColor: "rgba(255,255,255,0.15)" }}>
+                  <span className="text-[10px] font-bold text-white">{meta.plusN}</span>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <CommentsBlock comment={comment} setComment={setComment} />
+        </div>
       </div>
+
+      {sheet === "participants" && (
+        <HomeSheet title="Участники" onClose={() => setSheet(null)}>
+          <div className="space-y-2">
+            {participantAvatars.map((url, i) => (
+              <button key={i} className="w-full rounded-2xl bg-gray-100 px-4 py-3 flex items-center gap-3 text-left">
+                <img src={url} alt="" className="w-9 h-9 rounded-full object-cover" />
+                <span className="text-[15px] font-medium text-gray-900">Участник {i + 1}</span>
+              </button>
+            ))}
+            <p className="pt-2 text-center text-[13px] text-gray-400">И ещё {meta.plusN} участников</p>
+          </div>
+        </HomeSheet>
+      )}
+
+      {sheet === "profile" && (
+        <HomeSheet title="Профиль" onClose={() => setSheet(null)}>
+          <div className="flex flex-col items-center py-4 text-center">
+            <img src={authorAvatarUrl} alt={authorName} className="w-16 h-16 rounded-full object-cover" />
+            <p className="mt-3 text-[17px] font-semibold text-gray-900">{authorName}</p>
+            <p className="mt-1 text-[14px] text-gray-400">Профиль организатора в работе.</p>
+          </div>
+        </HomeSheet>
+      )}
     </div>
   );
 }
@@ -2154,13 +2445,14 @@ function DetailScreen({ onNavigate, backTo }: { onNavigate: (s: Screen) => void;
       paragraphs={articleBodies[3]}
       meta={eventMeta[0]}
       onBack={() => onNavigate(backTo)}
+      onProfile={() => onNavigate("profile")}
     />
   );
 }
 
 // ─── Screen: Article Detail ───────────────────────────────────────────────────
 
-function ArticleScreen({ article, onBack }: { article: Article; onBack: () => void }) {
+function ArticleScreen({ article, onBack, onProfile }: { article: Article; onBack: () => void; onProfile?: () => void }) {
   const coverSrc = (article.coverUrl as string) ?? (challengeImg as unknown as string);
   const avatarUrl = article.avatarUrl ?? (UNSPLASH.userAvatar as string);
   return (
@@ -2175,6 +2467,7 @@ function ArticleScreen({ article, onBack }: { article: Article; onBack: () => vo
       paragraphs={articleBodies[article.id] ?? [article.excerpt]}
       meta={eventMeta[article.id] ?? eventMeta[1]}
       onBack={onBack}
+      onProfile={onProfile}
     />
   );
 }
@@ -2514,7 +2807,7 @@ export default function App() {
   const renderScreen = () => {
     switch (screen) {
       case "home":
-        return <HomeScreen onNavigate={navigate} onBack={() => setScreen(previousScreen)} onPlanOpen={openPlanEvent} />;
+        return <HomeScreen onNavigate={navigate} onPlanOpen={openPlanEvent} />;
       case "plans":
         return <PlansScreen onNavigate={navigate} onPlanOpen={openPlanEvent} />;
       case "create":
@@ -2523,7 +2816,7 @@ export default function App() {
         return <DetailScreen onNavigate={navigate} backTo={detailOrigin} />;
       case "article":
         return activeArticle
-          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} />
+          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} onProfile={() => setScreen("profile")} />
           : null;
       case "search":
         return <SearchScreen onBack={() => setScreen("home")} onArticle={a => openArticle(a, "search")} />;
@@ -2537,6 +2830,32 @@ export default function App() {
         );
       case "planEvent": {
         const ev = planEvents[activePlanId];
+        const feedPlan = homeFeedPlans.find(plan => plan.id === activePlanId);
+        if (feedPlan) {
+          return (
+            <EventDetailScreen
+              title={feedPlan.title}
+              coverSrc={feedPlan.coverUrl as string | undefined}
+              backgroundGradient={feedPlan.gradient}
+              authorName={feedPlan.author.name}
+              authorAvatarUrl={feedPlan.author.avatarUrl}
+              badgeDate={feedPlan.timeDate}
+              paragraphs={[feedPlan.description]}
+              meta={{
+                date: feedPlan.timeDate,
+                time: feedPlan.timeDate,
+                location: feedPlan.address ?? "",
+                locationSub: "",
+                participants: Math.max(feedPlan.participants.length, 1),
+                plusN: feedPlan.participantsLabel,
+                joinLabel: "Присоединиться",
+              }}
+              onBack={() => setScreen(planEventOrigin)}
+              initiallyJoined={true}
+              onProfile={() => setScreen("profile")}
+            />
+          );
+        }
         return ev ? (
           <EventDetailScreen
             title={ev.title}
@@ -2548,6 +2867,7 @@ export default function App() {
             meta={ev.meta}
             onBack={() => setScreen(planEventOrigin)}
             initiallyJoined={true}
+            onProfile={() => setScreen("profile")}
           />
         ) : null;
       }
@@ -2559,7 +2879,7 @@ export default function App() {
   return (
     <div
       className="flex flex-col w-full h-screen overflow-hidden bg-white"
-      style={{ fontFamily: "'Inter', sans-serif", height: "100dvh" }}
+      style={{ fontFamily: "var(--font-sans)", height: "100dvh" }}
     >
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         {renderScreen()}
