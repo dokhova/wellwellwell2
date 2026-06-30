@@ -51,20 +51,6 @@ import {
 
 type Screen = "home" | "plans" | "create" | "detail" | "article" | "search" | "planEvent" | "profile";
 
-interface Plan {
-  id: number;
-  title: string;
-  description: string;
-  time: string;
-  category?: string;
-  place?: string;
-  dayIndexes?: number[];
-  avatarUrls?: string[];
-  coverUrl?: string;
-  gradient?: string;
-  done?: boolean;
-}
-
 interface Article {
   id: number;
   title: string;
@@ -86,56 +72,6 @@ const P_AVATARS = {
   m2: "https://images.unsplash.com/photo-1545996124-0501ebae84d0?crop=entropy&cs=tinysrgb&fit=crop&w=80&h=80&q=80",
   m3: "https://images.unsplash.com/photo-1617746652908-91e66c07499a?crop=entropy&cs=tinysrgb&fit=crop&w=80&h=80&q=80",
 };
-
-const plans: Plan[] = [
-  {
-    id: 1,
-    title: "Питание с белком",
-    description: "Составить и придерживаться плана питания с роста...",
-    time: "9:00 – 9:45",
-    category: "Питание",
-    place: "Онлайн",
-    dayIndexes: [2, 4],
-    avatarUrls: [P_AVATARS.w1],
-  },
-  {
-    id: 2,
-    title: "Программа весенней подготовки",
-    description: "Запланировать тренировки и распределить нагрузк...",
-    time: "11:00 – 12:00",
-    category: "Бег",
-    place: "Парк Горького",
-    dayIndexes: [2],
-    avatarUrls: [P_AVATARS.m1, P_AVATARS.w2],
-  },
-  {
-    id: 3,
-    title: "Купить изотоники в продуктовом",
-    description: "Составить список и купить изотоники после трениро...",
-    time: "13:30 – 14:00",
-    category: "Восстановление",
-    place: "Магазин",
-    dayIndexes: [2, 5],
-  },
-  {
-    id: 4,
-    title: "Звонок с коллегами",
-    description: "Обсудить текущие задачи и дедлайны по проектам...",
-    time: "16:00 – 17:00",
-    category: "Другое",
-    place: "Онлайн",
-    dayIndexes: [3],
-    avatarUrls: [P_AVATARS.m2, P_AVATARS.m3],
-  },
-  {
-    id: 5,
-    title: "Челлендж: Вечерний цифровой детокс",
-    description: "Отложить гаджеты за 2 часа до сна и заняться отды...",
-    time: "21:30 – 22:15",
-    category: "Восстановление",
-    dayIndexes: [0, 1, 2, 3, 4, 5, 6],
-  },
-];
 
 const UNSPLASH = {
   phone: "https://images.unsplash.com/photo-1592890288564-76628a30a657?crop=entropy&cs=tinysrgb&fit=crop&w=300&h=300&q=80",
@@ -401,6 +337,15 @@ const DEFAULT_PLAN_AUTHOR = {
   avatarUrl: UNSPLASH.avatarGena,
 };
 
+const DEFAULT_PLAN_PARTICIPANTS = [
+  UNSPLASH.avatarMaria,
+  P_AVATARS.m1,
+  P_AVATARS.w1,
+  P_AVATARS.m2,
+  P_AVATARS.w2,
+  P_AVATARS.m3,
+];
+
 const PLAN_TAG_GRADIENTS: Record<PlanTag, string> = {
   running: "linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%)",
   cycling: "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)",
@@ -422,8 +367,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed1 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 21 день",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/1",
@@ -440,8 +385,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed2 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Вечер · 14 дней",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/2",
@@ -457,8 +402,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed3 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/3",
@@ -474,8 +419,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed4 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/4",
@@ -491,8 +436,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed5 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 8 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/5",
@@ -508,8 +453,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed6 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 6], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 12 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/6",
@@ -525,8 +470,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed7 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.running,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "morning", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Утро · 10 недель",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/7",
@@ -542,8 +487,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed8 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [1, 3, 5], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "День · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/8",
@@ -559,8 +504,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed9 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.cycling,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "day", weekdays: [7], repeat: { type: "weekly" } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "День · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/9",
@@ -576,8 +521,8 @@ const homeFeedPlans: HomeFeedPlan[] = [
     coverUrl: planSeed10 as unknown as string,
     gradient: PLAN_TAG_GRADIENTS.recovery,
     schedule: { mode: "partOfDay", timeMode: "partOfDay", time: null, partOfDay: "evening", weekdays: [1, 2, 3, 4, 5, 6, 7], repeat: { type: "days", days: 21 } },
-    participants: [P_AVATARS.w1, P_AVATARS.m1, P_AVATARS.w2],
-    participantsLabel: "128 чел.",
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
     timeDate: "Вечер · Бессрочно",
     author: DEFAULT_PLAN_AUTHOR,
     shareUrl: "https://wellwellwell.app/plans/10",
@@ -625,27 +570,43 @@ function HomeSheet({
 }
 
 function FeedAvatarStack({ avatars, label }: { avatars: string[]; label: string }) {
-  const visible = avatars.slice(0, 3);
+  const visible = avatars.slice(0, 6);
+  const primary = visible[0];
+  const orbit = visible.slice(1);
+  const positions = [
+    "left-[24px] top-[34px]",
+    "left-[58px] top-[4px]",
+    "right-[58px] top-[8px]",
+    "right-[24px] top-[36px]",
+    "right-[70px] bottom-[0px]",
+  ];
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex -space-x-2.5">
-        {visible.length > 0 ? (
-          visible.map((url, index) => (
+      <div className="relative h-[86px] w-[220px]">
+        {primary ? (
+          <>
             <img
-              key={`${url}-${index}`}
-              src={url}
+              src={primary}
               alt=""
-              className="w-9 h-9 rounded-full border-2 border-white object-cover"
+              className="absolute left-1/2 top-1/2 h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/85 object-cover shadow-[0_8px_22px_rgba(0,0,0,0.32)]"
             />
-          ))
+            {orbit.map((url, index) => (
+              <img
+                key={`${url}-${index}`}
+                src={url}
+                alt=""
+                className={`absolute h-[34px] w-[34px] rounded-full border-2 border-white/85 object-cover shadow-[0_6px_14px_rgba(0,0,0,0.3)] ${positions[index] ?? "left-0 top-0"}`}
+              />
+            ))}
+          </>
         ) : (
-          <div className="w-9 h-9 rounded-full border-2 border-white bg-white/25 flex items-center justify-center">
+          <div className="absolute left-1/2 top-1/2 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/85 bg-white/25">
             <Users size={17} strokeWidth={1.8} color="#fff" />
           </div>
         )}
       </div>
-      <span className="mt-1.5 text-[13px] font-medium text-white">{label}</span>
+      <span className="mt-1 text-[30px] font-bold leading-9 text-white/75">{label}</span>
     </div>
   );
 }
@@ -1165,15 +1126,26 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
     декабря: 11,
   };
 
-  const planItems = plans
-    .flatMap((plan) => (plan.dayIndexes ?? [todayIndex]).map((dayIndex) => ({
+  const partOfDayOrder: Record<string, number> = { morning: 0, day: 1, noon: 1, evening: 2 };
+  const planItems = homeFeedPlans
+    .flatMap((plan) => {
+      const dayIndexes =
+        plan.schedule.mode === "partOfDay" || plan.schedule.timeMode === "partOfDay"
+          ? (plan.schedule.weekdays.length ? plan.schedule.weekdays.map((day) => day - 1) : [todayIndex])
+          : [todayIndex];
+      return dayIndexes.map((dayIndex) => ({
       plan,
       dayIndex,
       dayNumber: weekDates[dayIndex],
       monthName: weekDateMonths[dayIndex],
       sortKey: dayIndex,
-    })))
-    .sort((a, b) => a.sortKey - b.sortKey || a.plan.time.localeCompare(b.plan.time));
+      }));
+    })
+    .sort((a, b) => {
+      const aTime = a.plan.schedule.partOfDay ? partOfDayOrder[a.plan.schedule.partOfDay] ?? 3 : 3;
+      const bTime = b.plan.schedule.partOfDay ? partOfDayOrder[b.plan.schedule.partOfDay] ?? 3 : 3;
+      return a.sortKey - b.sortKey || aTime - bTime || a.plan.title.localeCompare(b.plan.title);
+    });
   const nextItem = planItems.find((item) => item.dayIndex >= todayIndex) ?? planItems[0];
 
   const getStatus = (planId: number, dayIndex: number) => {
@@ -1182,8 +1154,7 @@ function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?
     return "Запланировано";
   };
 
-  const getGradient = (plan: Plan) =>
-    plan.gradient ?? PLAN_CATEGORY_GRADIENTS[plan.category ?? "Другое"] ?? PLAN_CATEGORY_GRADIENTS["Другое"];
+  const getGradient = (plan: HomeFeedPlan) => plan.gradient ?? PLAN_TAG_GRADIENTS[normalizePlanTag(plan.tag)];
 
   return (
     <div className="flex h-full flex-col bg-surface">
@@ -2247,22 +2218,7 @@ function EventDetailScreen({
   };
 
   return (
-    <div className="relative h-full overflow-hidden bg-black">
-      <div className="absolute inset-0">
-        {coverSrc ? (
-          <img src={coverSrc} alt="" className="h-full min-h-[100dvh] w-full object-cover" />
-        ) : (
-          <div className="h-full min-h-[100dvh] w-full" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }} />
-        )}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.08) 24%, rgba(0,0,0,0.34) 58%, rgba(0,0,0,0.68) 100%)",
-          }}
-        />
-      </div>
-
+    <div className="relative h-full overflow-hidden bg-card">
       {toast && (
         <div
           className="absolute left-1/2 z-40 -translate-x-1/2 rounded-full px-4 py-2 text-[14px] font-medium text-white shadow-lg"
@@ -2272,33 +2228,45 @@ function EventDetailScreen({
         </div>
       )}
 
-      <button
-        onClick={onBack}
-        className="absolute left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
-        style={{ top: "calc(env(safe-area-inset-top) + 12px)" }}
-      >
-        <ArrowLeft size={20} strokeWidth={2.1} color="#fff" />
-      </button>
-      <button
-        onClick={() => {
-          setCopied(false);
-          setSheet("share");
-        }}
-        className="absolute right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
-        style={{ top: "calc(env(safe-area-inset-top) + 12px)" }}
-      >
-        <Share2 size={18} strokeWidth={2} color="#fff" />
-      </button>
-      <div
-        className="absolute left-4 z-30 rounded-full bg-black/50 px-3 py-1.5 text-[13px] font-medium text-white"
-        style={{ top: "calc(env(safe-area-inset-top) + 62px)" }}
-      >
-        {tagLabel}
-      </div>
+      <div className="h-full overflow-y-auto px-4 py-4">
+        <div className="relative min-h-[calc(100dvh-32px)] overflow-hidden rounded-[18px] bg-black">
+          <div className="absolute inset-0">
+            {coverSrc ? (
+              <img src={coverSrc} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <div className="h-full w-full" style={{ background: backgroundGradient ?? PLAN_TAG_GRADIENTS.other }} />
+            )}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.08) 24%, rgba(0,0,0,0.34) 58%, rgba(0,0,0,0.68) 100%)",
+              }}
+            />
+          </div>
 
-      <div className="relative z-10 h-full overflow-y-auto">
-        <div className="flex min-h-[100dvh] flex-col justify-end px-4 pb-5 pt-[138px]">
-          <div className="flex flex-col items-center text-center">
+          <button
+            onClick={onBack}
+            className="absolute left-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
+          >
+            <ArrowLeft size={20} strokeWidth={2.1} color="#fff" />
+          </button>
+          <button
+            onClick={() => {
+              setCopied(false);
+              setSheet("share");
+            }}
+            className="absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-black/35 active:opacity-85"
+          >
+            <Share2 size={18} strokeWidth={2} color="#fff" />
+          </button>
+          <div className="absolute left-3 top-[62px] z-30 rounded-full bg-black/50 px-3 py-1.5 text-[13px] font-medium text-white">
+            {tagLabel}
+          </div>
+
+          <div className="relative z-10">
+            <div className="flex min-h-[calc(100dvh-32px)] flex-col justify-end px-4 pb-5 pt-[138px]">
+              <div className="flex flex-col items-center text-center">
               <div className="flex -space-x-2">
                 {participantAvatars.slice(0, 3).map((url, i) => (
                   <img key={i} src={url} alt="" className="h-[30px] w-[30px] rounded-full border-2 border-white object-cover" />
@@ -2316,26 +2284,26 @@ function EventDetailScreen({
               >
                 {title}
               </h1>
-            </div>
+              </div>
 
-          <button
-            onClick={toggleJoin}
-            className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/75 bg-white text-[15px] active:opacity-90"
-            style={{ color: GREEN, fontWeight: joined ? 500 : 600 }}
-          >
-            {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color={GREEN} />}
-            {joined ? "Вы участвуете" : "Присоединиться"}
-          </button>
+              <button
+                onClick={toggleJoin}
+                className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/75 bg-white text-[15px] active:opacity-90"
+                style={{ color: GREEN, fontWeight: joined ? 500 : 600 }}
+              >
+                {joined ? <Check size={18} strokeWidth={2.4} color={GREEN} /> : <Plus size={18} strokeWidth={2.3} color={GREEN} />}
+                {joined ? "Вы участвуете" : "Присоединиться"}
+              </button>
 
-          <div
-            className="mt-4 rounded-[18px] border px-4 py-4 text-white"
-            style={{
-              backgroundColor: "rgba(255,255,255,0.13)",
-              borderColor: "rgba(255,255,255,0.16)",
-              backdropFilter: "blur(18px)",
-              WebkitBackdropFilter: "blur(18px)",
-            }}
-          >
+              <div
+                className="mt-4 rounded-[18px] border px-4 py-4 text-white"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.13)",
+                  borderColor: "rgba(255,255,255,0.16)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
+                }}
+              >
             <div className="mb-4 flex items-center justify-between gap-3">
               <button onClick={organizerAction} className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80">
                 <img src={authorAvatarUrl} alt={authorName} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />
@@ -2420,10 +2388,11 @@ function EventDetailScreen({
                 </div>
               </button>
             </div>
+              </div>
+            </div>
+            <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
           </div>
-
         </div>
-        <CommentsBlock comment={comment} setComment={setComment} comments={comments} onSend={sendComment} />
       </div>
 
       {sheet === "participants" && (
