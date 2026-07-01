@@ -5,6 +5,22 @@ import { chartData, PERIODS, weekDates, weekDateMonths, weekDays, weekRanges } f
 import { homeFeedPlans, normalizePlanTag, PLAN_TAG_GRADIENTS } from "@/app/data/plans";
 import { GREEN, PART_OF_DAY_RANGES } from "@/app/data/constants";
 
+const PLAN_START_DATE = new Date("2026-07-01T00:00:00");
+const LATEST_PLAN_SET_COUNT = 6;
+
+const calendarDays = weekDates.map((dayNumber, index) => {
+  const date = new Date(PLAN_START_DATE);
+  date.setDate(PLAN_START_DATE.getDate() + index);
+  const jsDay = date.getDay();
+  return {
+    date,
+    dayIndex: index,
+    dayNumber,
+    monthName: weekDateMonths[index],
+    weekday: jsDay === 0 ? 7 : jsDay,
+  };
+});
+
 export function PlanListCard({
   plan,
   dayNumber,
@@ -82,7 +98,7 @@ export function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen
     );
   };
 
-  const todayIndex = 2;
+  const todayIndex = 0;
   const monthShort = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
   const monthNumberByName: Record<string, number> = {
     января: 0,
@@ -100,24 +116,29 @@ export function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen
   };
 
   const partOfDayOrder: Record<string, number> = { morning: 0, day: 1, noon: 1, evening: 2 };
-  const planItems = homeFeedPlans
+  const latestPlanSets = homeFeedPlans.slice(0, LATEST_PLAN_SET_COUNT);
+  const sourceOrder = new Map(latestPlanSets.map((plan, index) => [plan.id, index]));
+  const planItems = latestPlanSets
     .flatMap((plan) => {
-      const dayIndexes =
-        plan.schedule.mode === "partOfDay" || plan.schedule.timeMode === "partOfDay"
-          ? (plan.schedule.weekdays.length ? plan.schedule.weekdays.map((day) => day - 1) : [todayIndex])
-          : [todayIndex];
-      return dayIndexes.map((dayIndex) => ({
-      plan,
-      dayIndex,
-      dayNumber: weekDates[dayIndex],
-      monthName: weekDateMonths[dayIndex],
-      sortKey: dayIndex,
+      const weekdays = plan.schedule.weekdays.length ? plan.schedule.weekdays : [calendarDays[0].weekday];
+      const matchingDays = calendarDays.filter((day) => weekdays.includes(day.weekday));
+      return matchingDays.map((day) => ({
+        plan,
+        dayIndex: day.dayIndex,
+        dayNumber: day.dayNumber,
+        monthName: day.monthName,
+        sortKey: day.dayIndex,
       }));
     })
     .sort((a, b) => {
       const aTime = a.plan.schedule.partOfDay ? partOfDayOrder[a.plan.schedule.partOfDay] ?? 3 : 3;
       const bTime = b.plan.schedule.partOfDay ? partOfDayOrder[b.plan.schedule.partOfDay] ?? 3 : 3;
-      return a.sortKey - b.sortKey || aTime - bTime || a.plan.title.localeCompare(b.plan.title);
+      const aExactTime = a.plan.schedule.time ?? "";
+      const bExactTime = b.plan.schedule.time ?? "";
+      return a.sortKey - b.sortKey
+        || aTime - bTime
+        || aExactTime.localeCompare(bExactTime)
+        || (sourceOrder.get(a.plan.id) ?? 0) - (sourceOrder.get(b.plan.id) ?? 0);
     });
   const nextItem = planItems.find((item) => item.dayIndex >= todayIndex) ?? planItems[0];
 

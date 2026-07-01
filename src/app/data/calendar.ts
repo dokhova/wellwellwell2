@@ -1,13 +1,13 @@
 import type { Period } from "@/app/types";
 
-export const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-export const weekDates = [29, 30, 1, 2, 3, 4, 5];
-export const weekDateMonths = ["июня", "июня", "июля", "июля", "июля", "июля", "июля"];
+export const weekDays = ["Ср", "Чт", "Пт", "Сб", "Вс", "Пн", "Вт"];
+export const weekDates = [1, 2, 3, 4, 5, 6, 7];
+export const weekDateMonths = ["июля", "июля", "июля", "июля", "июля", "июля", "июля"];
 export const PERIODS = ["День", "Неделя", "Месяц"] as const;
 export const weekRanges = [
-  "22–28 июня 2026",
-  "15–21 июня 2026",
-  "8–14 июня 2026",
+  "1–7 июля 2026",
+  "8–14 июля 2026",
+  "15–21 июля 2026",
 ];
 
 export const chartData = [

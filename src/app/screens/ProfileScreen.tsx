@@ -196,7 +196,7 @@ export function ProfileScreen(props: {
   return (
     <div className="h-full overflow-y-auto bg-card">
       <div className="relative flex min-h-full flex-col">
-        <div className={`relative w-full overflow-hidden bg-gray-300 ${props.isMe ? "h-[62dvh] min-h-[500px] max-h-[620px]" : "h-[280px]"}`}>
+        <div className={`relative w-full overflow-hidden bg-gray-300 ${props.isMe ? "h-[56dvh] min-h-[430px] max-h-[560px]" : "h-[280px]"}`}>
           {props.profile.photoUrl ? (
             <img src={props.profile.photoUrl} alt={props.profile.name} className="h-full w-full object-cover" />
           ) : (
