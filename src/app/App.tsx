@@ -2,6 +2,7 @@ import { Calendar, Home, Plus, User } from "lucide-react";
 import { useState } from "react";
 import type { Article, Screen } from "@/app/types";
 import { NO_BOTTOM_NAV, GREEN } from "@/app/data/constants";
+import { expertProfile, type ExpertProfile } from "@/app/data/profile";
 import { homeFeedPlans } from "@/app/data/plans";
 import { HomeScreen } from "@/app/screens/HomeScreen";
 import { PlansScreen } from "@/app/screens/PlansScreen";
@@ -10,6 +11,7 @@ import { DetailScreen } from "@/app/screens/DetailScreen";
 import { ArticleScreen } from "@/app/screens/ArticleScreen";
 import { SearchScreen } from "@/app/screens/SearchScreen";
 import { ProfileConnectionsScreen, ProfileScreen, type ConnectionType } from "@/app/screens/ProfileScreen";
+import { EditProfileScreen } from "@/app/screens/EditProfileScreen";
 import { EventDetailScreen } from "@/app/screens/EventDetailScreen";
 import { WorkInProgress } from "@/app/components/WorkInProgress";
 
@@ -24,6 +26,7 @@ export default function App() {
   const [previousScreen, setPreviousScreen] = useState<Screen>("plans");
   const [profileConnectionsType, setProfileConnectionsType] = useState<ConnectionType>("followers");
   const [viewingOwnProfile, setViewingOwnProfile] = useState(true);
+  const [editableProfile, setEditableProfile] = useState<ExpertProfile>(expertProfile);
 
   const navigate = (s: Screen, from?: Screen) => {
     if (s === "detail" && from) setDetailOrigin(from);
@@ -75,7 +78,20 @@ export default function App() {
             onArticle={a => openArticle(a, "profile" as Screen)}
             onPlanOpen={id => { openPlanEvent(id, "profile"); }}
             onConnectionsOpen={openProfileConnections}
+            onEdit={() => setScreen("editProfile")}
+            profile={editableProfile}
             isMe={viewingOwnProfile}
+          />
+        );
+      case "editProfile":
+        return (
+          <EditProfileScreen
+            profile={editableProfile}
+            onBack={() => setScreen("profile")}
+            onSave={(profile) => {
+              setEditableProfile(profile);
+              setScreen("profile");
+            }}
           />
         );
       case "profileConnections":

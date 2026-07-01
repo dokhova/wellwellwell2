@@ -46,6 +46,8 @@ export interface ExpertProfilePlan {
   axis: "Движение" | "Восстановление" | "Развитие";
   weeksCount: number | null;
   participantsCount: number;
+  coverUrl?: string;
+  gradient?: string;
 }
 
 export interface ExpertProfile {
@@ -55,10 +57,8 @@ export interface ExpertProfile {
   photoUrl: string;
   followersCount: number;
   followingCount: number;
-  plansCount: number;
   isFollowedByMe: boolean;
   isMe: boolean;
-  gender?: "female" | "male";
 }
 
 export const profileFollowers: ExpertConnection[] = [
@@ -105,6 +105,8 @@ export const expertPlans: ExpertProfilePlan[] = homeFeedPlans
     axis: tagAxis[normalizePlanTag(plan.tag)],
     weeksCount: getWeeksCount(plan.duration),
     participantsCount: getParticipantsCount(plan.participantsLabel, plan.participants.length),
+    coverUrl: plan.coverUrl,
+    gradient: plan.gradient,
   }));
 
 export const expertProfile: ExpertProfile = {
@@ -114,8 +116,6 @@ export const expertProfile: ExpertProfile = {
   photoUrl: expertPhoto as unknown as string,
   followersCount: profileFollowers.length,
   followingCount: profileFollowing.length,
-  plansCount: expertPlans.length,
   isFollowedByMe: false,
   isMe: false,
-  gender: "male",
 };

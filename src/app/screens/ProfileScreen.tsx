@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Check, ChevronRight, Edit3, UserPlus } from "lucide-react";
+import { ArrowLeft, Check, Edit3, UserPlus } from "lucide-react";
 import type { Article, Screen } from "@/app/types";
 import { GREEN, GREEN_LIGHT } from "@/app/data/constants";
 import {
   expertPlans,
-  expertProfile,
   profileFollowers,
   profileFollowing,
   type ExpertConnection,
+  type ExpertProfile,
   type ExpertProfilePlan,
 } from "@/app/data/profile";
 
@@ -51,20 +51,17 @@ function PlanCard({ plan, onOpen }: { plan: ExpertProfilePlan; onOpen: () => voi
   return (
     <button
       onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-xl bg-card p-3 text-left border border-border active:bg-black/[0.02]"
+      className="flex w-full items-center gap-3 rounded-[16px] bg-card px-3.5 py-3 text-left active:opacity-90 border border-border"
     >
-      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: GREEN_LIGHT }}>
-        <span className="text-[18px] font-bold leading-none" style={{ color: GREEN }}>
-          {plan.title.slice(0, 1)}
-        </span>
+      <div className="h-[50px] w-[50px] flex-shrink-0 overflow-hidden rounded-xl" style={{ background: plan.gradient ?? GREEN_LIGHT }}>
+        {plan.coverUrl && <img src={plan.coverUrl} alt={plan.title} className="h-full w-full object-cover" />}
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[15px] font-semibold leading-5 text-foreground">{plan.title}</h3>
-        <p className="mt-1 truncate text-[12px] leading-4 text-muted-foreground">
+        <h3 className="truncate text-[14px] leading-5 font-medium text-foreground">{plan.title}</h3>
+        <p className="mt-0.5 truncate text-[13px] leading-4 text-muted-foreground">
           {plan.axis} · {plan.weeksCount ? `${plan.weeksCount} нед.` : "Бессрочно"} · {plan.participantsCount}+ участников
         </p>
       </div>
-      <ChevronRight size={18} strokeWidth={2} className="flex-shrink-0 text-muted-foreground" />
     </button>
   );
 }
@@ -181,21 +178,25 @@ export function ProfileScreen(props: {
   onArticle: (a: Article) => void;
   onPlanOpen: (id: number) => void;
   onConnectionsOpen: (type: ConnectionType) => void;
+  onEdit: () => void;
+  profile: ExpertProfile;
   isMe: boolean;
 }) {
   void props.onArticle;
   void props.onNavigate;
-  const [isFollowed, setIsFollowed] = useState(expertProfile.isFollowedByMe);
-  const sectionTitle = expertProfile.gender === "female" ? "Её планы" : expertProfile.gender === "male" ? "Его планы" : "Планы";
+  const [isFollowed, setIsFollowed] = useState(props.profile.isFollowedByMe);
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
+  const shouldShowBioToggle = props.profile.bio.length > 100;
 
   return (
     <div className="h-full overflow-y-auto bg-surface">
       <div className="relative min-h-full pb-5">
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-300">
-          <img src={expertProfile.photoUrl} alt={expertProfile.name} className="h-full w-full object-cover" />
+          <img src={props.profile.photoUrl} alt={props.profile.name} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/42" />
           {props.isMe && (
             <button
+              onClick={props.onEdit}
               className="absolute right-4 top-4 flex h-10 items-center gap-2 rounded-full bg-black/50 px-4 text-[14px] font-semibold text-white active:opacity-85"
             >
               <Edit3 size={16} strokeWidth={2} />
@@ -204,33 +205,40 @@ export function ProfileScreen(props: {
           )}
         </div>
 
-        <section className="relative -mt-9 rounded-t-[28px] bg-card px-5 pb-6 pt-6 shadow-[0_-12px_34px_rgba(0,0,0,0.10)]">
-          <h1 className="text-[30px] font-bold leading-9 text-foreground">{expertProfile.name}</h1>
+        <section className="relative -mt-12 rounded-t-[28px] bg-card px-5 pb-6 pt-6 shadow-[0_-16px_38px_rgba(0,0,0,0.14)]">
+          <h1 className="text-[34px] font-bold leading-[38px] text-foreground">{props.profile.name}</h1>
           <p
             className="mt-2 text-[15px] leading-5 text-muted-foreground"
-            style={{
+            style={!isBioExpanded ? {
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
-            }}
+            } : undefined}
           >
-            {expertProfile.bio}
+            {props.profile.bio}
           </p>
+          {shouldShowBioToggle && (
+            <button
+              onClick={() => setIsBioExpanded((value) => !value)}
+              className="mt-1 text-[13px] font-medium"
+              style={{ color: GREEN }}
+            >
+              {isBioExpanded ? "Свернуть" : "Подробнее"}
+            </button>
+          )}
 
           <div className="mt-5 flex items-center justify-between rounded-2xl bg-muted px-1">
-            <ProfileStat value={expertProfile.followersCount} label="Подписчики" onClick={() => props.onConnectionsOpen("followers")} />
+            <ProfileStat value={props.profile.followersCount} label="Подписчики" onClick={() => props.onConnectionsOpen("followers")} />
             <div className="h-9 w-px bg-border" />
-            <ProfileStat value={expertProfile.followingCount} label="Подписки" onClick={() => props.onConnectionsOpen("following")} />
-            <div className="h-9 w-px bg-border" />
-            <ProfileStat value={expertProfile.plansCount} label="Планов" />
+            <ProfileStat value={props.profile.followingCount} label="Подписки" onClick={() => props.onConnectionsOpen("following")} />
           </div>
 
           {!props.isMe && (
             <button
               onClick={() => setIsFollowed((value) => !value)}
               className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[15px] font-semibold active:opacity-90"
-              style={isFollowed ? { backgroundColor: "var(--muted)", borderColor: "var(--border)", color: "var(--foreground)" } : { backgroundColor: GREEN, borderColor: GREEN, color: "#fff" }}
+              style={isFollowed ? { backgroundColor: "var(--muted)", borderColor: "var(--border)", color: "var(--foreground)" } : { backgroundImage: "linear-gradient(90deg, #00887F, #00A99D, #4DD0C4)", borderColor: GREEN, color: "#fff" }}
             >
               {isFollowed ? <Check size={18} strokeWidth={2.4} /> : <UserPlus size={18} strokeWidth={2.2} />}
               {isFollowed ? "Вы подписаны" : "Подписаться"}
@@ -238,7 +246,7 @@ export function ProfileScreen(props: {
           )}
 
           <div className="mt-7">
-            <h2 className="mb-3 text-[19px] font-bold leading-6 text-foreground">{sectionTitle}</h2>
+            <h2 className="mb-3 text-[19px] font-bold leading-6 text-foreground">Планы</h2>
             {expertPlans.length > 0 ? (
               <div className="space-y-2.5">
                 {expertPlans.map((plan) => (

@@ -1,4 +1,4 @@
-export type Screen = "home" | "plans" | "create" | "detail" | "article" | "search" | "planEvent" | "profile" | "profileConnections";
+export type Screen = "home" | "plans" | "create" | "detail" | "article" | "search" | "planEvent" | "profile" | "profileConnections" | "editProfile";
 
 export interface Article {
   id: number;
