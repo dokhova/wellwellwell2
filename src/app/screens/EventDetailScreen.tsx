@@ -107,7 +107,7 @@ export function EventDetailScreen({
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<{ id: number; author: string; avatarUrl: string; time: string; text: string }[]>([]);
   const [copied, setCopied] = useState(false);
-  const description = paragraphs.join(" ");
+  const description = paragraphs.join("\n\n");
   const participantAvatars = planParticipantAvatars?.length ? planParticipantAvatars : DETAIL_AVATARS;
   const organizerAction = onProfile ?? (() => setSheet("profile"));
   const needsDescriptionClamp = description.length > 260;
@@ -289,7 +289,8 @@ export function EventDetailScreen({
                   WebkitLineClamp: 4,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
-                } : undefined}
+                  whiteSpace: "pre-line",
+                } : { whiteSpace: "pre-line" }}
               >
                 {description}
               </p>

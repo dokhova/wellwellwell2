@@ -2,6 +2,11 @@ import cover1 from "@/imports/cover1-opt.jpg";
 import cover2 from "@/imports/cover2-opt.jpg";
 import cover3 from "@/imports/cover3-opt.jpg";
 import cover4 from "@/imports/cover4-opt.jpg";
+import expertAvatarMariaKuznetsova from "@/imports/avatar_01.jpg";
+import expertAvatarDmitryOrlov from "@/imports/avatar_02.jpg";
+import expertAvatarSvetlanaVoronova from "@/imports/avatar_03.jpg";
+import expertAvatarAlexeyPetrov from "@/imports/avatar_04.jpg";
+import expertAvatarYuliaBelova from "@/imports/avatar_05.jpg";
 import expertPhoto from "@/imports/photo_443373052130078088_c.jpg";
 import { P_AVATARS, UNSPLASH } from "@/app/data/constants";
 import { homeFeedPlans, normalizePlanTag } from "@/app/data/plans";
@@ -15,9 +20,9 @@ export const habits = [
 ];
 
 export const myEvents = [
-  { id: 3, title: "Челлендж: Вечерний детокс", date: "22 июня 2026", cover: cover2 as unknown as string },
-  { id: 2, title: "Программа весенней подготовки", date: "5 июля 2026", cover: cover3 as unknown as string },
-  { id: 4, title: "Полумарафон", date: "15 сентября 2026", cover: cover1 as unknown as string },
+  { id: 107, title: "Бежим первые 5 км", date: "5 июля 2026", cover: homeFeedPlans.find((plan) => plan.id === 107)?.coverUrl ?? (cover3 as unknown as string) },
+  { id: 105, title: "Готовимся к полумарафону", date: "15 сентября 2026", cover: homeFeedPlans.find((plan) => plan.id === 105)?.coverUrl ?? (cover1 as unknown as string) },
+  { id: 115, title: "Челлендж: 10 км без потолка", date: "22 июня 2026", cover: homeFeedPlans.find((plan) => plan.id === 115)?.coverUrl ?? (cover2 as unknown as string) },
 ];
 
 export const myArticles = [
@@ -128,7 +133,7 @@ export const experts: ExpertProfile[] = [
     id: "maria-kuznetsova",
     name: "Мария Кузнецова",
     bio: "Тренирую бегунов пять лет, от первой пробежки до финишной черты. Работаю онлайн и офлайн, люблю тех, кто начинает с нуля и не знает, получится ли.",
-    photoUrl: null,
+    photoUrl: expertAvatarMariaKuznetsova as unknown as string,
     followersCount: 1240,
     followingCount: 86,
     plansCount: 3,
@@ -139,7 +144,7 @@ export const experts: ExpertProfile[] = [
     id: "dmitry-orlov",
     name: "Дмитрий Орлов",
     bio: "Меня интересует не финиш сам по себе, а то, что происходит с телом и головой на пути к нему. Готовлю бегунов к полумарафонам и марафонам. В работе опираюсь на физиологию и данные, а не на ощущения.",
-    photoUrl: null,
+    photoUrl: expertAvatarDmitryOrlov as unknown as string,
     followersCount: 2180,
     followingCount: 64,
     plansCount: 3,
@@ -150,7 +155,7 @@ export const experts: ExpertProfile[] = [
     id: "svetlana-voronova",
     name: "Светлана Воронова",
     bio: "Специализируюсь на дистанции 5 км — первой серьёзной дистанции для большинства бегунов. Помогаю начать бегать, выстроить регулярность и выйти на первый старт.",
-    photoUrl: null,
+    photoUrl: expertAvatarSvetlanaVoronova as unknown as string,
     followersCount: 980,
     followingCount: 73,
     plansCount: 3,
@@ -161,7 +166,7 @@ export const experts: ExpertProfile[] = [
     id: "alexey-petrov",
     name: "Алексей Петров",
     bio: "Большинство проблем в беге — это не нагрузка и не слабая физподготовка, а неправильная механика движения. Помогаю найти и исправить то, что мешает бежать эффективно и без боли.",
-    photoUrl: null,
+    photoUrl: expertAvatarAlexeyPetrov as unknown as string,
     followersCount: 1560,
     followingCount: 51,
     plansCount: 3,
@@ -172,7 +177,7 @@ export const experts: ExpertProfile[] = [
     id: "yulia-belova",
     name: "Юлия Белова",
     bio: "Тренирую выносливость, физическую и ментальную. Работаю с бегунами, которым мало просто финишировать — они хотят прогрессировать. Специализация — дистанции 10 км и выше.",
-    photoUrl: null,
+    photoUrl: expertAvatarYuliaBelova as unknown as string,
     followersCount: 2410,
     followingCount: 92,
     plansCount: 3,
