@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ArrowLeft, Calendar, Check, ChevronDown, ChevronRight, Clock, Copy, Eye, MapPin, MessageCircle, Share2, Users } from "lucide-react";
+import { ArrowLeft, Calendar, Check, ChevronDown, ChevronRight, Clock, Copy, Eye, MapPin, MessageCircle, Plus, Share2, Users, Video } from "lucide-react";
 import type { EventDetailProps } from "@/app/types";
-import { DETAIL_AVATARS, PLAN_TAG_LABELS } from "@/app/data/plans";
-import { GREEN, PART_OF_DAY_RANGES, UNSPLASH } from "@/app/data/constants";
+import { DETAIL_AVATARS, normalizePlanTag, PLAN_TAG_GRADIENTS, PLAN_TAG_LABELS } from "@/app/data/plans";
+import { ALL_DAYS, GREEN, PART_OF_DAY_RANGES, UNSPLASH, WEEKDAY_VALUES } from "@/app/data/constants";
 import { HomeSheet } from "@/app/components/HomeSheet";
 
 function CommentsBlock({

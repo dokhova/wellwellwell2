@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Activity, Calendar, Check, ChevronDown } from "lucide-react";
+import { Activity, Calendar, Check, ChevronDown, ChevronRight } from "lucide-react";
 import type { HomeFeedPlan, Screen } from "@/app/types";
 import { chartData, PERIODS, weekDates, weekDateMonths, weekDays, weekRanges } from "@/app/data/calendar";
-import { homeFeedPlans, normalizePlanTag, PLAN_CATEGORY_GRADIENTS } from "@/app/data/plans";
+import { homeFeedPlans, normalizePlanTag, PLAN_TAG_GRADIENTS } from "@/app/data/plans";
 import { GREEN, PART_OF_DAY_RANGES } from "@/app/data/constants";
 
 export function PlansScreen({ onNavigate, onPlanOpen }: { onNavigate: (s: Screen, from?: Screen) => void; onPlanOpen: (id: number) => void }) {

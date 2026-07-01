@@ -1,5 +1,6 @@
 import challengeImg from "@/imports/challenge-opt.jpg";
 import type { Screen } from "@/app/types";
+import { articleBodies } from "@/app/data/articles";
 import { eventMeta } from "@/app/data/plans";
 import { UNSPLASH } from "@/app/data/constants";
 import { EventDetailScreen } from "@/app/screens/EventDetailScreen";

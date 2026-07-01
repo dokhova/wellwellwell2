@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, MoreVertical, Search, X } from "lucide-react";
 import type { Article } from "@/app/types";
 import { articles } from "@/app/data/articles";
 import { GREEN } from "@/app/data/constants";

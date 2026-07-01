@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ArrowLeft, Calendar, Check, ChevronDown, Clock, Eye, Image as ImageIcon, Lock, MapPin, Repeat2, Trash2, Users, Video } from "lucide-react";
+import { ArrowLeft, Calendar, Check, ChevronDown, Clock, Eye, Image as ImageIcon, Lock, MapPin, Plus, Repeat2, Trash2, Users, Video } from "lucide-react";
 import type { PartOfDay, PlanRepeat, Schedule, Screen, TimeMode, Visibility } from "@/app/types";
-import { ALL_DAYS, EVENT_PARTICIPANTS, GREEN, PART_OF_DAY_RANGES, VISIBILITY_OPTIONS, WEEKDAY_VALUES } from "@/app/data/constants";
+import { ALL_DAYS, EVENT_PARTICIPANTS, GREEN, GREEN_LIGHT, PART_OF_DAY_RANGES, VISIBILITY_OPTIONS, WEEKDAY_VALUES } from "@/app/data/constants";
 
 function CheckToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
