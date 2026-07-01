@@ -61,8 +61,9 @@ export interface HomeFeedPlan {
   timeDate: string;
   address?: string;
   author: {
+    id?: string;
     name: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
   };
   shareUrl: string;
 }
@@ -87,7 +88,7 @@ export interface EventDetailProps {
   participantAvatars?: string[];
   participantsLabel?: string;
   authorName: string;
-  authorAvatarUrl: string;
+  authorAvatarUrl: string | null;
   authorVerified?: boolean;
   readTime?: string;
   badgeDate: string;

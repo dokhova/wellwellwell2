@@ -15,6 +15,11 @@ export function EditProfileScreen({
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio);
   const [photoUrl, setPhotoUrl] = useState(profile.photoUrl);
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
 
   const handlePhotoPick = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -43,7 +48,13 @@ export function EditProfileScreen({
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         <label className="relative mb-5 block aspect-[1.9/1] overflow-hidden rounded-xl bg-gray-200">
-          <img src={photoUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          {photoUrl ? (
+            <img src={photoUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-secondary">
+              <span className="text-[42px] font-bold" style={{ color: GREEN }}>{initials}</span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-black/25" />
           <span className="absolute left-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[12px] font-medium text-white">
             <ImageIcon size={14} strokeWidth={2} />

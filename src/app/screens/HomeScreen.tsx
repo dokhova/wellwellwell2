@@ -37,6 +37,24 @@ function FeedAvatarStack({ avatars, label }: { avatars: string[]; label: string 
   );
 }
 
+function AuthorAvatar({ name, avatarUrl }: { name: string; avatarUrl: string | null }) {
+  if (avatarUrl) {
+    return <img src={avatarUrl} alt={name} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />;
+  }
+
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
+
+  return (
+    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: GREEN_LIGHT }}>
+      <span className="text-[12px] font-bold" style={{ color: GREEN }}>{initials}</span>
+    </div>
+  );
+}
+
 function FeedEventCard({
   plan,
   onOpen,
@@ -117,7 +135,7 @@ function FeedEventCard({
           onClick={onAuthor}
           className="flex min-w-0 flex-1 items-center text-left"
         >
-          <img src={plan.author.avatarUrl} alt={plan.author.name} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />
+          <AuthorAvatar name={plan.author.name} avatarUrl={plan.author.avatarUrl} />
           <span className="ml-2.5 truncate text-[15px] font-medium text-gray-900">{plan.author.name}</span>
         </button>
         <button onClick={onAuthorMenu} className="w-8 h-8 flex items-center justify-end text-gray-400">
@@ -131,9 +149,11 @@ function FeedEventCard({
 export function HomeScreen({
   onNavigate,
   onPlanOpen,
+  onAuthorOpen,
 }: {
   onNavigate: (s: Screen, from?: Screen) => void;
   onPlanOpen: (id: number, from?: Screen) => void;
+  onAuthorOpen: (expertId: string) => void;
 }) {
   const [tagFilter, setTagFilter] = useState<TagFilter>("all");
   const [sheet, setSheet] = useState<"filter" | "share" | "author" | null>(null);
@@ -188,7 +208,7 @@ export function HomeScreen({
               key={plan.id}
               plan={plan}
               onOpen={() => onPlanOpen(plan.id, "home")}
-              onAuthor={() => onNavigate("profile", "home")}
+              onAuthor={() => onAuthorOpen(plan.author.id ?? "gena")}
               onShare={() => openShare(plan)}
               onAuthorMenu={() => openAuthorMenu(plan)}
             />
@@ -270,7 +290,7 @@ export function HomeScreen({
       {sheet === "author" && activePlan && (
         <HomeSheet title={activePlan.author.name} onClose={() => setSheet(null)}>
           <div className="space-y-2">
-            <button onClick={() => { setSheet(null); onNavigate("profile", "home"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Открыть профиль</button>
+            <button onClick={() => { setSheet(null); onAuthorOpen(activePlan.author.id ?? "gena"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Открыть профиль</button>
             <button onClick={() => setSheet(null)} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Пожаловаться</button>
           </div>
         </HomeSheet>

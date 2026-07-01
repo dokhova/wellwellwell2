@@ -2,14 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, Check, Edit3, UserPlus } from "lucide-react";
 import type { Article, Screen } from "@/app/types";
 import { GREEN, GREEN_LIGHT } from "@/app/data/constants";
-import {
-  expertPlans,
-  profileFollowers,
-  profileFollowing,
-  type ExpertConnection,
-  type ExpertProfile,
-  type ExpertProfilePlan,
-} from "@/app/data/profile";
+import { profileFollowers, profileFollowing, type ExpertConnection, type ExpertProfile, type ExpertProfilePlan } from "@/app/data/profile";
 
 export type ConnectionType = "followers" | "following";
 
@@ -180,6 +173,7 @@ export function ProfileScreen(props: {
   onConnectionsOpen: (type: ConnectionType) => void;
   onEdit: () => void;
   profile: ExpertProfile;
+  plans: ExpertProfilePlan[];
   isMe: boolean;
 }) {
   void props.onArticle;
@@ -187,12 +181,23 @@ export function ProfileScreen(props: {
   const [isFollowed, setIsFollowed] = useState(props.profile.isFollowedByMe);
   const [isBioExpanded, setIsBioExpanded] = useState(false);
   const shouldShowBioToggle = props.profile.bio.length > 100;
+  const heroInitials = props.profile.name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
 
   return (
     <div className="h-full overflow-y-auto bg-surface">
       <div className="relative min-h-full pb-5">
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-300">
-          <img src={props.profile.photoUrl} alt={props.profile.name} className="h-full w-full object-cover" />
+          {props.profile.photoUrl ? (
+            <img src={props.profile.photoUrl} alt={props.profile.name} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center" style={{ background: "linear-gradient(135deg, var(--secondary) 0%, var(--brand-bright) 100%)" }}>
+              <span className="text-[62px] font-bold" style={{ color: GREEN }}>{heroInitials}</span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/42" />
           {props.isMe && (
             <button
@@ -247,9 +252,9 @@ export function ProfileScreen(props: {
 
           <div className="mt-7">
             <h2 className="mb-3 text-[19px] font-bold leading-6 text-foreground">Планы</h2>
-            {expertPlans.length > 0 ? (
+            {props.plans.length > 0 ? (
               <div className="space-y-2.5">
-                {expertPlans.map((plan) => (
+                {props.plans.map((plan) => (
                   <PlanCard key={plan.id} plan={plan} onOpen={() => props.onPlanOpen(plan.id)} />
                 ))}
               </div>

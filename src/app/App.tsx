@@ -2,7 +2,7 @@ import { Calendar, Home, Plus, User } from "lucide-react";
 import { useState } from "react";
 import type { Article, Screen } from "@/app/types";
 import { NO_BOTTOM_NAV, GREEN } from "@/app/data/constants";
-import { expertProfile, type ExpertProfile } from "@/app/data/profile";
+import { experts, expertProfile, getExpertPlans, type ExpertProfile } from "@/app/data/profile";
 import { homeFeedPlans } from "@/app/data/plans";
 import { HomeScreen } from "@/app/screens/HomeScreen";
 import { PlansScreen } from "@/app/screens/PlansScreen";
@@ -26,6 +26,7 @@ export default function App() {
   const [previousScreen, setPreviousScreen] = useState<Screen>("plans");
   const [profileConnectionsType, setProfileConnectionsType] = useState<ConnectionType>("followers");
   const [viewingOwnProfile, setViewingOwnProfile] = useState(true);
+  const [viewingExpertId, setViewingExpertId] = useState("gena");
   const [editableProfile, setEditableProfile] = useState<ExpertProfile>(expertProfile);
 
   const navigate = (s: Screen, from?: Screen) => {
@@ -49,6 +50,13 @@ export default function App() {
     setScreen("planEvent");
   };
 
+  const openExpertProfile = (expertId: string) => {
+    setViewingExpertId(expertId);
+    setViewingOwnProfile(false);
+    setPreviousScreen(screen);
+    setScreen("profile");
+  };
+
   const openProfileConnections = (type: ConnectionType) => {
     setProfileConnectionsType(type);
     setPreviousScreen(screen);
@@ -58,7 +66,7 @@ export default function App() {
   const renderScreen = () => {
     switch (screen) {
       case "home":
-        return <HomeScreen onNavigate={navigate} onPlanOpen={openPlanEvent} />;
+        return <HomeScreen onNavigate={navigate} onPlanOpen={openPlanEvent} onAuthorOpen={openExpertProfile} />;
       case "plans":
         return <PlansScreen onNavigate={navigate} onPlanOpen={openPlanEvent} />;
       case "create":
@@ -67,11 +75,14 @@ export default function App() {
         return <DetailScreen onNavigate={navigate} backTo={detailOrigin} />;
       case "article":
         return activeArticle
-          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} onProfile={() => { setViewingOwnProfile(false); setScreen("profile"); }} />
+          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} onProfile={() => openExpertProfile("gena")} />
           : null;
       case "search":
         return <SearchScreen onBack={() => setScreen("home")} onArticle={a => openArticle(a, "search")} />;
       case "profile":
+        const viewedProfile = viewingOwnProfile
+          ? editableProfile
+          : experts.find((expert) => expert.id === viewingExpertId) ?? expertProfile;
         return (
           <ProfileScreen
             onNavigate={navigate}
@@ -79,7 +90,8 @@ export default function App() {
             onPlanOpen={id => { openPlanEvent(id, "profile"); }}
             onConnectionsOpen={openProfileConnections}
             onEdit={() => setScreen("editProfile")}
-            profile={editableProfile}
+            profile={viewedProfile}
+            plans={getExpertPlans(viewedProfile.id)}
             isMe={viewingOwnProfile}
           />
         );
@@ -133,7 +145,7 @@ export default function App() {
               duration={feedPlan.duration}
               onBack={() => setScreen(planEventOrigin)}
               initiallyJoined={false}
-              onProfile={() => { setViewingOwnProfile(false); setScreen("profile"); }}
+              onProfile={() => openExpertProfile(feedPlan.author.id ?? "gena")}
             />
           );
         }

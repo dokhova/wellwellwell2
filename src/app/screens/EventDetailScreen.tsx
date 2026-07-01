@@ -71,6 +71,24 @@ function CommentsBlock({
   );
 }
 
+function AuthorAvatar({ name, avatarUrl, size = 36 }: { name: string; avatarUrl: string | null; size?: number }) {
+  if (avatarUrl) {
+    return <img src={avatarUrl} alt={name} className="flex-shrink-0 rounded-full object-cover" style={{ width: size, height: size }} />;
+  }
+
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
+
+  return (
+    <div className="flex flex-shrink-0 items-center justify-center rounded-full" style={{ width: size, height: size, backgroundColor: "var(--secondary)" }}>
+      <span className="font-bold" style={{ color: GREEN, fontSize: Math.max(12, size * 0.34) }}>{initials}</span>
+    </div>
+  );
+}
+
 // ─── Unified EventDetailScreen ────────────────────────────────────────────────
 
 export function EventDetailScreen({
@@ -252,7 +270,7 @@ export function EventDetailScreen({
           <div className="mt-4 border-t border-border pt-4">
             <div className="mb-4 flex items-center justify-between gap-3">
               <button onClick={organizerAction} className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80">
-                <img src={authorAvatarUrl} alt={authorName} className="h-9 w-9 flex-shrink-0 rounded-full object-cover" />
+                <AuthorAvatar name={authorName} avatarUrl={authorAvatarUrl} />
                 <span className="truncate text-[15px] font-medium text-foreground">{authorName}</span>
               </button>
               <button
@@ -370,7 +388,7 @@ export function EventDetailScreen({
       {sheet === "profile" && (
         <HomeSheet title="Профиль" onClose={() => setSheet(null)}>
           <div className="flex flex-col items-center py-4 text-center">
-            <img src={authorAvatarUrl} alt={authorName} className="w-16 h-16 rounded-full object-cover" />
+            <AuthorAvatar name={authorName} avatarUrl={authorAvatarUrl} size={64} />
             <p className="mt-3 text-[17px] font-semibold text-gray-900">{authorName}</p>
             <p className="mt-1 text-[14px] text-gray-400">Профиль организатора в работе.</p>
           </div>
