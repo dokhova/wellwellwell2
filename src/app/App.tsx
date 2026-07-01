@@ -9,7 +9,7 @@ import { CreateScreen } from "@/app/screens/CreateScreen";
 import { DetailScreen } from "@/app/screens/DetailScreen";
 import { ArticleScreen } from "@/app/screens/ArticleScreen";
 import { SearchScreen } from "@/app/screens/SearchScreen";
-import { ProfileScreen } from "@/app/screens/ProfileScreen";
+import { ProfileConnectionsScreen, ProfileScreen, type ConnectionType } from "@/app/screens/ProfileScreen";
 import { EventDetailScreen } from "@/app/screens/EventDetailScreen";
 import { WorkInProgress } from "@/app/components/WorkInProgress";
 
@@ -22,10 +22,13 @@ export default function App() {
   const [activePlanId, setActivePlanId] = useState<number>(1);
   const [planEventOrigin, setPlanEventOrigin] = useState<Screen>("plans");
   const [previousScreen, setPreviousScreen] = useState<Screen>("plans");
+  const [profileConnectionsType, setProfileConnectionsType] = useState<ConnectionType>("followers");
+  const [viewingOwnProfile, setViewingOwnProfile] = useState(true);
 
   const navigate = (s: Screen, from?: Screen) => {
     if (s === "detail" && from) setDetailOrigin(from);
     if (s === "create" && from) setCreateOrigin(from);
+    if (s === "profile") setViewingOwnProfile(!from);
     setPreviousScreen(screen);
     setScreen(s);
   };
@@ -43,6 +46,12 @@ export default function App() {
     setScreen("planEvent");
   };
 
+  const openProfileConnections = (type: ConnectionType) => {
+    setProfileConnectionsType(type);
+    setPreviousScreen(screen);
+    setScreen("profileConnections");
+  };
+
   const renderScreen = () => {
     switch (screen) {
       case "home":
@@ -55,7 +64,7 @@ export default function App() {
         return <DetailScreen onNavigate={navigate} backTo={detailOrigin} />;
       case "article":
         return activeArticle
-          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} onProfile={() => setScreen("profile")} />
+          ? <ArticleScreen article={activeArticle} onBack={() => setScreen(articleOrigin)} onProfile={() => { setViewingOwnProfile(false); setScreen("profile"); }} />
           : null;
       case "search":
         return <SearchScreen onBack={() => setScreen("home")} onArticle={a => openArticle(a, "search")} />;
@@ -64,7 +73,17 @@ export default function App() {
           <ProfileScreen
             onNavigate={navigate}
             onArticle={a => openArticle(a, "profile" as Screen)}
-            onPlanOpen={id => { openPlanEvent(id); }}
+            onPlanOpen={id => { openPlanEvent(id, "profile"); }}
+            onConnectionsOpen={openProfileConnections}
+            isMe={viewingOwnProfile}
+          />
+        );
+      case "profileConnections":
+        return (
+          <ProfileConnectionsScreen
+            type={profileConnectionsType}
+            onBack={() => setScreen(previousScreen)}
+            onProfileOpen={() => setScreen("profile")}
           />
         );
       case "planEvent": {
@@ -98,7 +117,7 @@ export default function App() {
               duration={feedPlan.duration}
               onBack={() => setScreen(planEventOrigin)}
               initiallyJoined={false}
-              onProfile={() => setScreen("profile")}
+              onProfile={() => { setViewingOwnProfile(false); setScreen("profile"); }}
             />
           );
         }

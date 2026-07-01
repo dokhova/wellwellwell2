@@ -188,7 +188,7 @@ export function HomeScreen({
               key={plan.id}
               plan={plan}
               onOpen={() => onPlanOpen(plan.id, "home")}
-              onAuthor={() => onNavigate("profile")}
+              onAuthor={() => onNavigate("profile", "home")}
               onShare={() => openShare(plan)}
               onAuthorMenu={() => openAuthorMenu(plan)}
             />
@@ -270,7 +270,7 @@ export function HomeScreen({
       {sheet === "author" && activePlan && (
         <HomeSheet title={activePlan.author.name} onClose={() => setSheet(null)}>
           <div className="space-y-2">
-            <button onClick={() => { setSheet(null); onNavigate("profile"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Открыть профиль</button>
+            <button onClick={() => { setSheet(null); onNavigate("profile", "home"); }} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Открыть профиль</button>
             <button onClick={() => setSheet(null)} className="w-full rounded-2xl bg-gray-100 px-4 py-3 text-left text-[15px] font-medium text-gray-900">Пожаловаться</button>
           </div>
         </HomeSheet>

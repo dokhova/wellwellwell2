@@ -2,7 +2,10 @@ import cover1 from "@/imports/cover1-opt.jpg";
 import cover2 from "@/imports/cover2-opt.jpg";
 import cover3 from "@/imports/cover3-opt.jpg";
 import cover4 from "@/imports/cover4-opt.jpg";
+import expertPhoto from "@/imports/photo_443373052130078088_c.jpg";
 import { P_AVATARS, UNSPLASH } from "@/app/data/constants";
+import { homeFeedPlans, normalizePlanTag } from "@/app/data/plans";
+import type { PlanTag } from "@/app/types";
 
 export const habits = [
   { icon: "🌅", name: "Утренняя зарядка", done: 7, total: 7, streak: 14 },
@@ -29,3 +32,90 @@ export const subscriptionAvatars = [
   P_AVATARS.w2,
   P_AVATARS.m1,
 ];
+
+export interface ExpertConnection {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  isFollowedByMe: boolean;
+}
+
+export interface ExpertProfilePlan {
+  id: number;
+  title: string;
+  axis: "Движение" | "Восстановление" | "Развитие";
+  weeksCount: number | null;
+  participantsCount: number;
+}
+
+export interface ExpertProfile {
+  id: string;
+  name: string;
+  bio: string;
+  photoUrl: string;
+  followersCount: number;
+  followingCount: number;
+  plansCount: number;
+  isFollowedByMe: boolean;
+  isMe: boolean;
+  gender?: "female" | "male";
+}
+
+export const profileFollowers: ExpertConnection[] = [
+  { id: "maria", name: "Мария Нестерова", avatarUrl: UNSPLASH.avatarMaria, isFollowedByMe: true },
+  { id: "dmitry", name: "Дмитрий Савин", avatarUrl: UNSPLASH.avatarDmitry, isFollowedByMe: false },
+  { id: "anna", name: "Анна Романова", avatarUrl: P_AVATARS.w2, isFollowedByMe: false },
+  { id: "kirill", name: "Кирилл Волков", avatarUrl: P_AVATARS.m1, isFollowedByMe: true },
+];
+
+export const profileFollowing: ExpertConnection[] = [
+  { id: "gena", name: "Гена Лохтин", avatarUrl: UNSPLASH.avatarGena, isFollowedByMe: true },
+  { id: "olga", name: "Ольга Миронова", avatarUrl: P_AVATARS.w1, isFollowedByMe: true },
+  { id: "ilya", name: "Илья Гордеев", avatarUrl: P_AVATARS.m3, isFollowedByMe: false },
+];
+
+const tagAxis: Record<PlanTag, ExpertProfilePlan["axis"]> = {
+  running: "Движение",
+  cycling: "Движение",
+  yoga: "Развитие",
+  recovery: "Восстановление",
+  other: "Развитие",
+};
+
+const getWeeksCount = (duration?: string) => {
+  if (!duration) return null;
+  const weeksMatch = duration.match(/(\d+)\s*нед/);
+  if (weeksMatch) return Number.parseInt(weeksMatch[1], 10);
+  const daysMatch = duration.match(/(\d+)\s*(дн|день|дня|дней)/);
+  if (daysMatch) return Math.max(1, Math.ceil(Number.parseInt(daysMatch[1], 10) / 7));
+  return null;
+};
+
+const getParticipantsCount = (label: string, fallback: number) => {
+  const parsed = Number.parseInt(label, 10);
+  return Number.isNaN(parsed) ? fallback : parsed;
+};
+
+export const expertPlans: ExpertProfilePlan[] = homeFeedPlans
+  .filter((plan) => plan.author.name === "Гена Лохтин")
+  .slice(0, 4)
+  .map((plan) => ({
+    id: plan.id,
+    title: plan.isChallenge ? `Челлендж: ${plan.title}` : plan.title,
+    axis: tagAxis[normalizePlanTag(plan.tag)],
+    weeksCount: getWeeksCount(plan.duration),
+    participantsCount: getParticipantsCount(plan.participantsLabel, plan.participants.length),
+  }));
+
+export const expertProfile: ExpertProfile = {
+  id: "gena",
+  name: "Гена Лохтин",
+  bio: "Тренер по бегу и устойчивым привычкам. Собирает понятные планы для тех, кто хочет начать без перегруза и держать ритм.",
+  photoUrl: expertPhoto as unknown as string,
+  followersCount: profileFollowers.length,
+  followingCount: profileFollowing.length,
+  plansCount: expertPlans.length,
+  isFollowedByMe: false,
+  isMe: false,
+  gender: "male",
+};

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Calendar, Check, ChevronDown, Clock, Eye, Image as ImageIcon, Lock, MapPin, Plus, Repeat2, Trash2, Users, Video } from "lucide-react";
+import { ArrowLeft, Calendar, Check, ChevronDown, Clock, Copy, Eye, Image as ImageIcon, Lock, MapPin, Plus, Repeat2, Trash2, Users, Video, X } from "lucide-react";
 import type { PartOfDay, PlanRepeat, Schedule, Screen, TimeMode, Visibility } from "@/app/types";
 import { ALL_DAYS, EVENT_PARTICIPANTS, GREEN, GREEN_LIGHT, PART_OF_DAY_RANGES, VISIBILITY_OPTIONS, WEEKDAY_VALUES } from "@/app/data/constants";
 
@@ -17,9 +17,9 @@ function CheckToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 
 function PlusButton() {
   return (
-    <button className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-input">
+    <span className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-input">
       <Plus size={16} strokeWidth={2.2} color="var(--muted-foreground)" />
-    </button>
+    </span>
   );
 }
 

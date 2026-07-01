@@ -5,7 +5,7 @@ import { eventMeta } from "@/app/data/plans";
 import { UNSPLASH } from "@/app/data/constants";
 import { EventDetailScreen } from "@/app/screens/EventDetailScreen";
 
-export function DetailScreen({ onNavigate, backTo }: { onNavigate: (s: Screen) => void; backTo: Screen }) {
+export function DetailScreen({ onNavigate, backTo }: { onNavigate: (s: Screen, from?: Screen) => void; backTo: Screen }) {
   return (
     <EventDetailScreen
       title="Челлендж: Вечерний цифровой детокс"
@@ -17,7 +17,7 @@ export function DetailScreen({ onNavigate, backTo }: { onNavigate: (s: Screen) =
       paragraphs={articleBodies[3]}
       meta={eventMeta[0]}
       onBack={() => onNavigate(backTo)}
-      onProfile={() => onNavigate("profile")}
+      onProfile={() => onNavigate("profile", "detail")}
     />
   );
 }
