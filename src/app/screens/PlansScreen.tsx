@@ -11,6 +11,7 @@ export function PlanListCard({
   monthLabel,
   scheduleMeta,
   done = false,
+  showToggle = true,
   onOpen,
   onToggle,
 }: {
@@ -19,6 +20,7 @@ export function PlanListCard({
   monthLabel: string;
   scheduleMeta: string;
   done?: boolean;
+  showToggle?: boolean;
   onOpen: () => void;
   onToggle?: () => void;
 }) {
@@ -50,19 +52,21 @@ export function PlanListCard({
         </h3>
         <p className="mt-0.5 truncate text-[13px] leading-4 text-muted-foreground">{scheduleMeta}</p>
       </div>
-      <span
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle?.();
-        }}
-        className="flex h-[26px] w-[26px] flex-shrink-0 items-center justify-center rounded-full border"
-        style={{
-          borderColor: done ? GREEN : "var(--border)",
-          backgroundColor: done ? GREEN : "transparent",
-        }}
-      >
-        {done && <Check size={14} strokeWidth={3} color="#fff" />}
-      </span>
+      {showToggle && (
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle?.();
+          }}
+          className="flex h-[26px] w-[26px] flex-shrink-0 items-center justify-center rounded-full border"
+          style={{
+            borderColor: done ? GREEN : "var(--border)",
+            backgroundColor: done ? GREEN : "transparent",
+          }}
+        >
+          {done && <Check size={14} strokeWidth={3} color="#fff" />}
+        </span>
+      )}
     </button>
   );
 }

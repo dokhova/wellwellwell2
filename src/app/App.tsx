@@ -172,7 +172,7 @@ export default function App() {
         {renderScreen()}
       </div>
       {showNav && (
-        <div className="flex-shrink-0 flex items-center justify-around border-t border-gray-200 bg-white px-2 pb-safe pt-2"
+        <div className={`flex-shrink-0 flex items-center justify-around bg-white px-2 pb-safe pt-2 ${screen === "profile" ? "" : "border-t border-gray-200"}`}
           style={{ paddingBottom: "max(env(safe-area-inset-bottom), 8px)" }}
         >
           {([

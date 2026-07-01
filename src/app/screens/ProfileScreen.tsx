@@ -194,8 +194,8 @@ export function ProfileScreen(props: {
     .join("");
 
   return (
-    <div className="h-full overflow-y-auto bg-surface">
-      <div className="relative min-h-full pb-5">
+    <div className="h-full overflow-y-auto bg-card">
+      <div className="relative">
         <div className="relative h-[280px] w-full overflow-hidden bg-gray-300">
           {props.profile.photoUrl ? (
             <img src={props.profile.photoUrl} alt={props.profile.name} className="h-full w-full object-cover" />
@@ -289,6 +289,7 @@ export function ProfileScreen(props: {
                       monthLabel={monthShortByName[weekDateMonths[index % weekDateMonths.length]] ?? weekDateMonths[index % weekDateMonths.length]}
                       scheduleMeta={`${plan.timeDate} · Активен`}
                       onOpen={() => props.onPlanOpen(plan.id)}
+                      showToggle={false}
                     />
                   ))}
                   {hasMorePlans && (

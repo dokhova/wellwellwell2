@@ -13,6 +13,12 @@ import planCover112 from "@/imports/plan-cover-112.png";
 import planCover113 from "@/imports/plan-cover-113.png";
 import planCover114 from "@/imports/plan-cover-114.png";
 import planCover115 from "@/imports/plan-cover-115.png";
+import feedCover1 from "@/imports/Cover 1.png";
+import feedCover2 from "@/imports/Cover 2.png";
+import feedCover3 from "@/imports/Cover 3.png";
+import feedCover4 from "@/imports/Cover 4.png";
+import feedCover5 from "@/imports/Cover 5.png";
+import feedCover6 from "@/imports/Cover 6.png";
 import expertAvatarMariaKuznetsova from "@/imports/avatar_01.jpg";
 import expertAvatarDmitryOrlov from "@/imports/avatar_02.jpg";
 import expertAvatarSvetlanaVoronova from "@/imports/avatar_03.jpg";
@@ -55,6 +61,110 @@ export const PLAN_TAG_GRADIENTS: Record<PlanTag, string> = {
 };
 
 export const homeFeedPlans: HomeFeedPlan[] = [
+  {
+    id: 1,
+    tag: "running",
+    format: "offline",
+    duration: "1 день",
+    title: "Субботний забег в Лужниках",
+    description: "Встречаемся в 09:00 у главного входа в Лужники. Бежим 8 км в разговорном темпе без разделения на группы.",
+    habit: { title: "Групповой забег", durationMin: 60 },
+    coverUrl: feedCover1 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "09:00", partOfDay: null, weekdays: [6], start: "2026-07-04T09:00:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Суббота · 09:00",
+    address: "Лужники",
+    author: { id: "maria-kuznetsova", name: "Мария Кузнецова", avatarUrl: expertAvatarMariaKuznetsova as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/1",
+  },
+  {
+    id: 2,
+    tag: "running",
+    format: "online",
+    duration: "Каждый день",
+    title: "Разминка перед бегом",
+    description: "5 минут суставной разминки. Затем по 10 махов каждой ногой, 10 выпадов и 30 секунд лёгкого бега перед основной тренировкой.",
+    habit: { title: "Разминка перед бегом", durationMin: 5 },
+    coverUrl: feedCover2 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "18:55", partOfDay: null, weekdays: [1, 2, 3, 4, 5, 6, 7], start: "2026-07-01T18:55:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Каждый день · 18:55",
+    author: { id: "dmitry-orlov", name: "Дмитрий Орлов", avatarUrl: expertAvatarDmitryOrlov as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/2",
+  },
+  {
+    id: 3,
+    tag: "running",
+    format: "online",
+    duration: "Каждый день",
+    title: "Восстановление после пробежки",
+    description: "5 минут походите пешком. Затем растяните икры, заднюю поверхность бедра и сгибатели бедра по 30 секунд на каждую сторону.",
+    habit: { title: "Восстановление после пробежки", durationMin: 8 },
+    coverUrl: feedCover3 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "20:00", partOfDay: null, weekdays: [1, 2, 3, 4, 5, 6, 7], start: "2026-07-01T20:00:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Каждый день · 20:00",
+    author: { id: "maria-kuznetsova", name: "Мария Кузнецова", avatarUrl: expertAvatarMariaKuznetsova as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/3",
+  },
+  {
+    id: 4,
+    tag: "running",
+    format: "offline",
+    duration: "1 день",
+    title: "Интервалы 6×400",
+    description: "10 минут разминки. Затем 6 ускорений по 400 метров с 200 метрами лёгкого бега между ними. В конце — 5 минут спокойной ходьбы.",
+    habit: { title: "Интервальная тренировка", durationMin: 45 },
+    coverUrl: feedCover4 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "19:30", partOfDay: null, weekdays: [2], start: "2026-07-07T19:30:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Вторник · 19:30",
+    author: { id: "dmitry-orlov", name: "Дмитрий Орлов", avatarUrl: expertAvatarDmitryOrlov as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/4",
+  },
+  {
+    id: 5,
+    tag: "running",
+    isChallenge: true,
+    format: "offline",
+    duration: "1 день",
+    title: "5 км без остановки",
+    description: "Пробегите 5 км без перехода на шаг. Начните медленно и ускоряйтесь только если после 3-го километра чувствуете запас сил.",
+    habit: { title: "Контрольный забег", durationMin: 35 },
+    coverUrl: feedCover5 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "19:00", partOfDay: null, weekdays: [3], start: "2026-07-01T19:00:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Среда · 19:00",
+    author: { id: "maria-kuznetsova", name: "Мария Кузнецова", avatarUrl: expertAvatarMariaKuznetsova as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/5",
+  },
+  {
+    id: 6,
+    tag: "running",
+    format: "offline",
+    duration: "1 день",
+    title: "Бег в горку",
+    description: "Найдите подъём 80–150 метров. Выполните 6 подъёмов в уверенном темпе, вниз спускайтесь шагом для восстановления.",
+    habit: { title: "Силовая беговая тренировка", durationMin: 40 },
+    coverUrl: feedCover6 as unknown as string,
+    gradient: PLAN_TAG_GRADIENTS.running,
+    schedule: { mode: "exact", timeMode: "exact", time: "19:00", partOfDay: null, weekdays: [4], start: "2026-07-02T19:00:00", repeat: { type: "weekly" } },
+    participants: DEFAULT_PLAN_PARTICIPANTS,
+    participantsLabel: "100+ чел.",
+    timeDate: "Четверг · 19:00",
+    author: { id: "svetlana-voronova", name: "Светлана Воронова", avatarUrl: expertAvatarSvetlanaVoronova as unknown as string },
+    shareUrl: "https://wellwellwell.app/plans/6",
+  },
   {
     id: 101,
     tag: "running",
